@@ -26,6 +26,68 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
+		"/signup": {
+			"post": {
+				"operationId": "Signup",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"properties": {
+												"userId": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"userId"
+											],
+											"type": "object"
+										},
+										{
+											"properties": {
+												"error": {}
+											},
+											"required": [
+												"error"
+											],
+											"type": "object"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"password": {
+										"type": "string"
+									},
+									"username": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"password",
+									"username"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/echo": {
 			"post": {
 				"operationId": "ExampleEcho",
