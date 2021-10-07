@@ -13,6 +13,7 @@
             }
         }
 	},
+	"controllerPathGlobs": ["./src/controllers/*.ts"],
 	"routes": {
 		"basePath": "/",
 		"entryFile": "./src/index.ts",
