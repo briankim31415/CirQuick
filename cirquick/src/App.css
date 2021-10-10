@@ -36,3 +36,25 @@
     transform: rotate(360deg);
   }
 }
+
+.login {
+  margin: auto;
+  width: 50%;
+  padding: 150px 0;
+  text-align: center;
+  font-family: "Inter", sans-serif;
+}
+
+.button {
+  border-radius: 5px;
+  background-color: #7a7cff;
+  color: white;
+}
+
+.header {
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+  background-color: #7a7cff;
+  color: white;
+}
