@@ -22,4 +22,49 @@ export class AdminController extends Controller {
             return {error:error};
         }
 	}
+  @Post("signin")
+	public async signin(@Body() body: { username: string, password:string}): Promise<{ userId: string }|{error:any}> {
+		try {
+            const user = await UserModel.findOne({username: body.username});
+            if(user){
+              if(body.password==user.password){
+                return {userId:user.userId};
+              }
+              else{
+                return {error:"account/password error"}; 
+              }
+            }
+            else{
+              return {error:"No account exists"};
+            }
+        } catch (error) {
+            console.log(error);
+            this.setStatus(HttpStatusCode.INTERNAL_SERVER_ERROR);
+            return {error:error};
+        }
+	}
+  @Post("reset")
+	public async reset(@Body() body: { username: string, password:string, repassword:string}): Promise<{ userId: string }|{error:any}> {
+		try {
+            const query =UserModel.findOne({username: body.username});
+            query.exec((err, data) => {
+                if(!err){
+                  if (body.repassword != body.password) {
+                    return {error:"password not match"};
+                  }
+                  else{
+                    UserModel.updateOne({ username: body.username }, { password: body.password });
+                    return {username:body.username};
+                  }
+                }
+                else{
+                    return {error:"No account exists"};
+                }
+              });
+        } catch (error) {
+            console.log(error);
+            this.setStatus(HttpStatusCode.INTERNAL_SERVER_ERROR);
+            return {error:error};
+        }
+	}
 }
