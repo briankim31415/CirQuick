@@ -1,34 +1,31 @@
 import React from 'react';
 import './App.css';
+import blank from './blank';
 import {Link} from 'react-router-dom';
 
-function Login() {
+
+function signUp() {
     return(
-            <div className = "login">
+        <div className = "signUp">
                 <h1 id = "header">CIRQUICK</h1>
-            
-                <h2>LOG IN</h2>
+
+                <h2>Create an Account</h2>
 
                 <input id = "username" type = "input" placeholder="Username"/>
                 <br/>
                 <input id = "password" type = "input" placeholder="Password"/>
+                <br/>
+                <input id = "confirmPassword" type = "input" placeholder="Confirm Password"/>
 
                 <br/>
                 <br/>
                 
-                <Link to  = "/dataSet">
+                <Link to = "/dataSet">
                     <button className = "button">Submit</button>
                 </Link>
 
-                <br/>
-                <br/>
-
-                <Link to = "/signUp">
-                    <button className = "newAccount">Create an account</button>
-                </Link>
-
             </div>
-    );
+    )
 }
 
-export default Login;
+export default signUp;

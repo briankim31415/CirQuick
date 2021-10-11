@@ -1,14 +1,24 @@
 import React from 'react';
 import Login from './login';
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'; 
+import signUp from './signUp';
+import blank from './blank';
 
 function App() {
-return(
-  <div>
+  return(
+    
+    <Router>
+      <div>
 
-    <Login />
-
-  </div>
-);
+        <Switch>
+          <Route path="/signUp" exact component = {signUp}></Route>
+          <Route path="/dataSet" exact component = {blank}></Route>
+          <Route path="/" exact component = {Login}></Route>
+        </Switch>
+        
+      </div>
+    </Router>
+  );
 
 }
 
