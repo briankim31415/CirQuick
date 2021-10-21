@@ -28,6 +28,41 @@ export default class ProjectDataOrchestrator{
         }
     }
 
+    //TODO
+    static async changeResourcesToProject(userId: string,action: "checkin" | "checkout", totalResources: number, amount: number, hwSetId: string,hwSetName: string,projectId: string):Promise<boolean> {
+        const res=ProjectDataOrchestrator.getProject(projectId);
+        if(res == null){
+            return false;
+        }else{
+            if(action=="checkin"){
+                amount=-amount;
+            }
+            await ProjectModel.updateOne({userId:userId},{currentResources:(await res).currentResources+amount},{
+                $set:{"resources.$hwSetId":{
+                    totalResources:totalResources,
+                        $push:{usersCheckedOut:{
+                                amount:amount,
+                                checkedOutBy:userId
+                            }}
+                }}
+            });
+            return true;
+        }
+        
+    }
+
+    static async addTransactionToProject(userId: string,  action: "checkin" | "checkout", amount: number, hwSetId: string,hwSetName: string,projectId: string) {
+        await ProjectModel.updateOne({userId:userId},{
+            $push:{transactions:{
+                action:action,
+                amount:amount,
+                hwSetId:hwSetId,
+                hwSetName:hwSetName,
+                projectId:projectId
+            }}
+        });
+    }
+
     static async getProject(projectId:string):Promise<ProjectInterface|null>{
         return await ProjectModel.findOne({projectId:projectId})??null;
     }

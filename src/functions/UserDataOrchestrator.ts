@@ -10,6 +10,18 @@ export default class UserDataOrchestrator{
         });
     }
 
+    static async addTransactionToUser(userId: string,  action: "checkin" | "checkout", amount: number, hwSetId: string,hwSetName: string,projectId: string) {
+        await UserModel.updateOne({userId:userId},{
+            $push:{transactions:{
+                action:action,
+                amount:amount,
+                hwSetId:hwSetId,
+                hwSetName:hwSetName,
+                projectId:projectId
+            }}
+        });
+    }
+
     static userExists(userId: string):Promise<boolean> {
         throw new Error("Method not implemented.");
     }
