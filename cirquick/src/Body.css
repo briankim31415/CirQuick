@@ -1,0 +1,98 @@
+.projectHeader {
+  font-family: "Inter";
+  color: #7a7a7a;
+  background-color: #c4c4c4;
+  padding-top: 0.5%;
+  padding-bottom: 0.5%;
+  padding-left: 3%;
+  margin-left: 15%;
+  margin-right: 5%;
+  margin-bottom: 0%;
+  font-weight: bold;
+}
+
+.projectInfo {
+  width: 79%;
+  padding-bottom: 3%;
+  background-color: #f1f0f0;
+  margin-left: 16%;
+}
+
+.total {
+  margin: 0%;
+  padding-left: 3%;
+  padding-top: 2%;
+  color: #7a7a7a;
+}
+
+.resourceHeader {
+  margin: 0%;
+  padding-left: 5%;
+  padding-top: 2%;
+  color: #7a7a7a;
+}
+
+.resourceContainer {
+  display: grid;
+  grid-template-columns: 65% 25%;
+  grid-gap: 1rem;
+}
+
+.resourceDetail {
+  margin: 0%;
+  padding-left: 10%;
+  color: #7a7a7a;
+  width: 60%;
+}
+
+.buttons {
+  padding-top: 10%;
+}
+
+.checking {
+  justify-content: center;
+  align-self: center;
+}
+
+.checking > input {
+  width: 60%;
+  font-size: 1rem;
+}
+
+.button1 {
+  border: black;
+  font-family: "Inter";
+  font-size: 0.75rem;
+  color: white;
+  background: #7a7cff;
+  margin-right: 4%;
+  padding: 3%;
+  font-weight: bolder;
+  border-radius: 4px;
+}
+
+.button2 {
+  border: black;
+  font-family: "Inter";
+  font-size: 0.75rem;
+  color: white;
+  background: #7a7cff;
+  margin-left: 4%;
+  padding: 3%;
+  font-weight: bolder;
+  border-radius: 4px;
+}
+
+.check {
+  width: 100px;
+}
+
+::placeholder {
+  color: black;
+  font-family: "Inter";
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 15% 85%;
+}
