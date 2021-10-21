@@ -1,7 +1,7 @@
 {
-  "name": "",
-  "version": "",
-  "description": "OpenAPI client for ",
+  "name": "cirquick",
+  "version": "0.0.0",
+  "description": "OpenAPI client for Cirquick Backend",
   "author": "OpenAPI-Generator Contributors",
   "keywords": [
     "axios",
