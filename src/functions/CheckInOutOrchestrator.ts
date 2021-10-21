@@ -1,4 +1,4 @@
-import ResourceModel,{ResourceInterface} from "src/models/ResourceModel";
+import ResourceModel,{ResourceInterface} from "../models/ResourceModel";
 
 export default class CheckInOutOrchestrator{
     static async updateResourceData(userId: string,  action: "checkin" | "checkout", amount: number,hwSetId:string,projectId:string):Promise<boolean>{

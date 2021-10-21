@@ -1,6 +1,6 @@
-import ProjectDataOrchestrator from "src/functions/ProjectDataOrchestrator";
-import UserDataOrchestrator from "src/functions/UserDataOrchestrator";
-import { UserInterface } from "src/models/UserModel";
+import ProjectDataOrchestrator from "../functions/ProjectDataOrchestrator";
+import UserDataOrchestrator from "../functions/UserDataOrchestrator";
+import { UserInterface } from "../models/UserModel";
 import { Body, Controller, Post, Route, Get, Query } from "tsoa";
 
 @Route("user")

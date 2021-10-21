@@ -1,5 +1,5 @@
-import ResourceDataOrchestrator from "src/functions/ResourceDataOrchestrator";
-import { ResourceInterface } from "src/models/ResourceModel";
+import ResourceDataOrchestrator from "../functions/ResourceDataOrchestrator";
+import { ResourceInterface } from "../models/ResourceModel";
 import { Body, Controller, Post, Route, Get, Query } from "tsoa";
 
 @Route("resource")

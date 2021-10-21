@@ -1,4 +1,4 @@
-import ProjectModel,{ProjectInterface} from "src/models/ProjectModel";
+import ProjectModel,{ProjectInterface} from "../models/ProjectModel";
 import { v4 as uuidv4 } from 'uuid';
 
 export default class ProjectDataOrchestrator{

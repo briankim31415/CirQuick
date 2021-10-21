@@ -1,4 +1,4 @@
-import UserModel from "src/models/UserModel";
+import UserModel from "../models/UserModel";
 
 export default class UserDataOrchestrator{
     static async addProjectToUser(userId: string, projectId: string, role: "admin"|"member") {

@@ -1,9 +1,9 @@
-import ProjectDataOrchestrator from "src/functions/ProjectDataOrchestrator";
-import UserDataOrchestrator from "src/functions/UserDataOrchestrator";
-import CheckInOutOrchestrator from "src/functions/CheckInOutOrchestrator";
-import ResourceDataOrchestrator from "src/functions/ResourceDataOrchestrator";
-import { ProjectInterface } from "src/models/ProjectModel";
-import { HttpStatusCode } from "src/utils/ErrorCodes";
+import ProjectDataOrchestrator from "../functions/ProjectDataOrchestrator";
+import UserDataOrchestrator from "../functions/UserDataOrchestrator";
+import CheckInOutOrchestrator from "../functions/CheckInOutOrchestrator";
+import ResourceDataOrchestrator from "../functions/ResourceDataOrchestrator";
+import { ProjectInterface } from "../models/ProjectModel";
+import { HttpStatusCode } from "../utils/ErrorCodes";
 import { Body, Controller, Post, Route, Get } from "tsoa";
 
 @Route("checkinout")

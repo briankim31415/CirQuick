@@ -1,4 +1,4 @@
-import ResourceModel,{ResourceInterface} from "src/models/ResourceModel";
+import ResourceModel,{ResourceInterface} from "../models/ResourceModel";
 
 export default class ResourceDataOrchestrator{
     static async getResourceData(hwSetId:string):Promise<ResourceInterface|null>{

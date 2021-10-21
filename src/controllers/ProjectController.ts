@@ -1,7 +1,7 @@
-import ProjectDataOrchestrator from "src/functions/ProjectDataOrchestrator";
-import UserDataOrchestrator from "src/functions/UserDataOrchestrator";
-import { ProjectInterface } from "src/models/ProjectModel";
-import { HttpStatusCode } from "src/utils/ErrorCodes";
+import ProjectDataOrchestrator from "../functions/ProjectDataOrchestrator";
+import UserDataOrchestrator from "../functions/UserDataOrchestrator";
+import { ProjectInterface } from "../models/ProjectModel";
+import { HttpStatusCode } from "../utils/ErrorCodes";
 import { Body, Controller, Post, Route, Get } from "tsoa";
 
 @Route("project")
@@ -30,8 +30,8 @@ export class ProjectController extends Controller {
     }
 
     @Post("addUser")
-    public async addUserToProject(userId:string, projectId:string){
-        await UserDataOrchestrator.addProjectToUser(userId,projectId,"member");
-        await ProjectDataOrchestrator.addUser(userId,projectId);
+    public async addUserToProject(@Body() body:{userId:string, projectId:string}){
+        await UserDataOrchestrator.addProjectToUser(body.userId,body.projectId,"member");
+        await ProjectDataOrchestrator.addUser(body.userId,body.projectId);
     }
 }

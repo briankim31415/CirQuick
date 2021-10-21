@@ -7,14 +7,13 @@ export interface ResourceInterface {
   availablity: number;
 
   //Transactions is not necessary
-  transactions: [
+  transactions:
     {
       action: "checkin" | "checkout";
       amount: number;
       userId: string;
       projectId: string;
-    }
-  ];
+    }[];
 }
 
 const schema = new mongoose.Schema<ResourceInterface>({
