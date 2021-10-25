@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import Blank from './Blank';
+import Blank from './blank';
 import {Link} from 'react-router-dom';
 
 

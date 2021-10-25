@@ -22,6 +22,20 @@
 
 .popup-inner .close-btn {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 20%;
+  right: 10%;
+}
+
+.close-btn {
+  border-radius: 5px;
+  background-color: #7a7cff;
+  color: white;
+}
+
+.popup-header {
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+  background-color: #7a7cff;
+  color: white;
 }

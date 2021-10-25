@@ -3,6 +3,7 @@ import './App.css';
 import './Popup.css';
 import {Link} from 'react-router-dom';
 
+
 function Login() {
     return(
             <div className = "login">
@@ -11,6 +12,7 @@ function Login() {
                 <h2>LOG IN</h2>
 
                 <input id = "username" type = "input" placeholder="Username"/>
+                <br/>
                 <br/>
                 <input id = "password" type = "input" placeholder="Password"/>
 

@@ -3,7 +3,6 @@ import './App.css';
 import './Popup.css';
 import './Body.css';
 import {Link} from 'react-router-dom';
-import Dropdown from './Dropdown';
 import Popup from './Popup';
 
 function Blank() {
@@ -47,16 +46,19 @@ function Blank() {
                         <h2>Add New Project</h2>
                         <input id = "name" type = "input" placeholder="Name"/>
                         <br/>
+                        <br/>
                         <input id = "description" type = "input" placeholder="Description"/>
                         <br/>
+                        <br/>
                         <input id = "projectID" type = "input" placeholder="Project ID"/>
-                        <br/>   
+                        <br/>  
+                        <br/>  
                         <button className = "button">Add</button>
                     </Popup>
                 </div>
 
                 <div>
-                    <Dropdown />
+                    <Drop />
                     <ProjectBody />
                 </div>
             </div>
@@ -128,5 +130,43 @@ class ProjectBody extends Component {
     }
 
 }
+
+class Drop extends Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        projectName : ''
+      }
+    }
+  
+    handleProjectChange = (event) => {
+        this.setState({
+            projectName: event.target.value
+        })
+    }
+
+
+    render() {
+  
+      return(
+        <div className = "dropdown">
+          <form>
+            <label className = "drop-label">Search Project</label>
+            <br/>
+
+            <select 
+                className = "drop"
+                value = {this.state.projectName} 
+                onChange = {this.handleProjectChange}>
+              <option value = "project1">Project_1</option>
+              <option value = "project2">Project_2</option>
+            </select>
+            <p>{this.state.projectName}</p>
+          </form>
+        </div>
+      );
+  
+    }
+  }
 
 export default Blank;
