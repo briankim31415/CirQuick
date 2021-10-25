@@ -49,6 +49,11 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Partial_ResourceInterface_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"hwSetId":{"dataType":"string"},"hwSetName":{"dataType":"string"},"capacity":{"dataType":"double"},"availablity":{"dataType":"double"},"transactions":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"projectId":{"dataType":"string","required":true},"userId":{"dataType":"string","required":true},"amount":{"dataType":"double","required":true},"action":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["checkin"]},{"dataType":"enum","enums":["checkout"]}],"required":true}}}}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Partial_UserInterface_": {
         "dataType": "refAlias",
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"userId":{"dataType":"string"},"username":{"dataType":"string"},"password":{"dataType":"string"},"projectsJoined":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"role":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["admin"]},{"dataType":"enum","enums":["member"]}],"required":true},"projectId":{"dataType":"string","required":true}}}},"transactions":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"projectId":{"dataType":"string","required":true},"hwSetName":{"dataType":"string","required":true},"hwSetId":{"dataType":"string","required":true},"amount":{"dataType":"double","required":true},"action":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["checkin"]},{"dataType":"enum","enums":["checkout"]}],"required":true}}}}},"validators":{}},
@@ -268,6 +273,29 @@ export function RegisterRoutes(app: express.Router) {
 
 
             const promise = controller.getResource.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, undefined, next);
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/resource/create',
+
+            function ResourceController_createResource(request: any, response: any, next: any) {
+            const args = {
+                    body: {"in":"body","name":"body","required":true,"ref":"Partial_ResourceInterface_"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new ResourceController();
+
+
+            const promise = controller.createResource.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

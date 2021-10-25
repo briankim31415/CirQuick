@@ -31,7 +31,7 @@ export class AdminController extends Controller {
                 return {userId:user.userId};
               }
               else{
-                return {error:"account/password error"}; 
+                return {error:"password error"}; 
               }
             }
             else{

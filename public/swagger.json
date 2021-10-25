@@ -173,6 +173,57 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"Partial_ResourceInterface_": {
+				"properties": {
+					"hwSetId": {
+						"type": "string"
+					},
+					"hwSetName": {
+						"type": "string"
+					},
+					"capacity": {
+						"type": "number",
+						"format": "double"
+					},
+					"availablity": {
+						"type": "number",
+						"format": "double"
+					},
+					"transactions": {
+						"items": {
+							"properties": {
+								"projectId": {
+									"type": "string"
+								},
+								"userId": {
+									"type": "string"
+								},
+								"amount": {
+									"type": "number",
+									"format": "double"
+								},
+								"action": {
+									"type": "string",
+									"enum": [
+										"checkin",
+										"checkout"
+									]
+								}
+							},
+							"required": [
+								"projectId",
+								"userId",
+								"amount",
+								"action"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			},
 			"Partial_UserInterface_": {
 				"properties": {
 					"userId": {
@@ -768,6 +819,28 @@
 						}
 					}
 				]
+			}
+		},
+		"/resource/create": {
+			"post": {
+				"operationId": "CreateResource",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_ResourceInterface_"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/echo": {

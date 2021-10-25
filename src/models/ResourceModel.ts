@@ -28,7 +28,7 @@ const schema = new mongoose.Schema<ResourceInterface>({
         userId: { type: String, required: true }, //(hwSetId)
         projectId: { type: String, required: true },
       },
-    ]}
+    ], default: []}
   });
   
   export default mongoose.model<ResourceInterface>("resources", schema);
