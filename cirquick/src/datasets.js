@@ -12,75 +12,31 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 
-// import data from './dataset_list.json'
-
 const columns = [
   { id: 'name', label: 'Name', minWidth: 170 },
   { id: 'desc', label: 'Description', minWidth: 200 },
-  { id: 'link', label: 'Link', minWidth: 170 },
   { id: 'download', label: 'Download', minWidth: 170 },
 ];
 
-function createData(name, desc, link, download) {
-  return { name, desc, link, download };
+function createTable() {
+  var data = require('./dataset_list.json');
+  var index = 0;
+  var data_list = [];
+  while (data[index] != null) {
+    // var name = data[index].Name;
+    var link = data[index].Link;
+    var name = <a href={link} target="_blank"> {data[index].Name} </a>;
+    var desc = data[index].Description;
+    var download_link = data[index].Download;
+    var download = <a href={download_link}> {download_link} </a>
+    var element = { name, desc, download };
+    data_list.push(element);
+    index++;
+  }
+  return data_list;
 }
 
-// function createData() {
-//   var data = require('./dataset_list.json')
-//   for (var i = 0; i < data.length; i++)
-//   {
-//       var obj = data[i];
-//       console.log(`Name: ${obj.Name}, ${obj.Description}`);
-//   }
-// }
-
-const rows = [
-  createData('India', 'IN', 1324171354, 3287263),
-  createData('China', 'CN', 1403500365, 9596961),
-  createData('Italy', 'IT', 60483973, 301340),
-  createData('United States', 'US', 327167434, 9833520),
-  createData('Canada', 'CA', 37602103, 9984670),
-  createData('Australia', 'AU', 25475400, 7692024),
-  createData('Germany', 'DE', 83019200, 357578),
-  createData('Ireland', 'IE', 4857000, 70273),
-  createData('Mexico', 'MX', 126577691, 1972550),
-  createData('Japan', 'JP', 126317000, 377973),
-  createData('France', 'FR', 67022000, 640679),
-  createData('United Kingdom', 'GB', 67545757, 242495),
-  createData('Russia', 'RU', 146793744, 17098246),
-  createData('Nigeria', 'NG', 200962417, 923768),
-  createData('Brazil', 'BR', 210147125, 8515767),
-  createData('India', 'IN', 1324171354, 3287263),
-  createData('China', 'CN', 1403500365, 9596961),
-  createData('Italy', 'IT', 60483973, 301340),
-  createData('United States', 'US', 327167434, 9833520),
-  createData('Canada', 'CA', 37602103, 9984670),
-  createData('Australia', 'AU', 25475400, 7692024),
-  createData('Germany', 'DE', 83019200, 357578),
-  createData('Ireland', 'IE', 4857000, 70273),
-  createData('Mexico', 'MX', 126577691, 1972550),
-  createData('Japan', 'JP', 126317000, 377973),
-  createData('France', 'FR', 67022000, 640679),
-  createData('United Kingdom', 'GB', 67545757, 242495),
-  createData('Russia', 'RU', 146793744, 17098246),
-  createData('Nigeria', 'NG', 200962417, 923768),
-  createData('Brazil', 'BR', 210147125, 8515767),
-  createData('India', 'IN', 1324171354, 3287263),
-  createData('China', 'CN', 1403500365, 9596961),
-  createData('Italy', 'IT', 60483973, 301340),
-  createData('United States', 'US', 327167434, 9833520),
-  createData('Canada', 'CA', 37602103, 9984670),
-  createData('Australia', 'AU', 25475400, 7692024),
-  createData('Germany', 'DE', 83019200, 357578),
-  createData('Ireland', 'IE', 4857000, 70273),
-  createData('Mexico', 'MX', 126577691, 1972550),
-  createData('Japan', 'JP', 126317000, 377973),
-  createData('France', 'FR', 67022000, 640679),
-  createData('United Kingdom', 'GB', 67545757, 242495),
-  createData('Russia', 'RU', 146793744, 17098246),
-  createData('Nigeria', 'NG', 200962417, 923768),
-  createData('Brazil', 'BR', 210147125, 8515767),
-];
+const rows = createTable();
 
 function StickyHeadTable() {
   const [page, setPage] = React.useState(0);

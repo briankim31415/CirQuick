@@ -23,6 +23,7 @@ def get_datasets():
         else:
             count += 1
 
+        key = count - 1
         name = li.contents[0].string
         desc = li.contents[1].string[1:].strip()
         link = URL_HEAD + li.find('a', href=True)['href']
@@ -31,14 +32,14 @@ def get_datasets():
         dataset_soup = bs(dataset_page.content, "html.parser")
         download = URL_HEAD + dataset_soup.find("h2", id="files").next_element.next_element.next_element.find('a', href=True)['href']
 
-        dataset_info = [name, desc, link, download]
+        dataset_info = [key, name, desc, link, download]
         datasets.append(dataset_info)
     
     return datasets
 
 # Write data to csv file
 def write_to_csv():
-    col_names = ['Name', 'Description', 'Link', 'Download']
+    col_names = ['key', 'Name', 'Description', 'Link', 'Download']
     data_table = get_datasets()
     datasets = pd.DataFrame(data_table, columns=col_names)
     datasets.to_csv('dataset_list.csv', index=False)
@@ -70,7 +71,7 @@ def make_json(csvFilePath, jsonFilePath):
              
             # Assuming a column named 'No' to
             # be the primary key
-            key = rows['Name']
+            key = rows['key']
             data[key] = rows
  
     # Open a json writer, and use the json.dumps()
