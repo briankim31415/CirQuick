@@ -2,7 +2,7 @@ import { Body, Controller, Post, Route, Security } from "tsoa";
 import UserModel, {UserInterface} from "../models/UserModel";
 import { v4 as uuidv4 } from 'uuid';
 import { HttpStatusCode } from "../utils/ErrorCodes";
-
+import bcrypt from "bcrypt";
 @Route("/")
 export class AdminController extends Controller {
 	@Post("signup")
@@ -27,7 +27,7 @@ export class AdminController extends Controller {
 		try {
             const user = await UserModel.findOne({username: body.username});
             if(user){
-              if(body.password==user.password){
+              if(await bcrypt.compare(body.password,user.password)){
                 return {userId:user.userId};
               }
               else{

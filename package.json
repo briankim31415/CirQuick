@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/briankim31415/CirQuick#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "express": "^4.17.1",
     "mongoose": "^6.0.9",
     "swagger-ui-express": "^4.1.6",
@@ -26,6 +27,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/express": "^4.17.13",
     "@types/node": "^16.10.2",
     "@types/swagger-ui-express": "^4.1.3",

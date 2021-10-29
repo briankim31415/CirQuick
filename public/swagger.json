@@ -825,8 +825,15 @@
 			"post": {
 				"operationId": "CreateResource",
 				"responses": {
-					"204": {
-						"description": "No content"
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "boolean"
+								}
+							}
+						}
 					}
 				},
 				"security": [],
