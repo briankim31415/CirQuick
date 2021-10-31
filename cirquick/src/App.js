@@ -14,8 +14,8 @@ function App() {
         <Switch>
           <Route path="/signUp" exact component = {signUp}></Route>
           <Route path="/dataSet" exact component = {datasets}></Route>
-          <Route path="/blank" exact component = {blank}></Route>
-          <Route path="/" exact component = {Login}></Route>
+          <Route path="/blank/:username" component = {blank}></Route>
+          <Route exact path="/" exact component = {Login}></Route>
         </Switch>
         
       </div>
