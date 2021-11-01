@@ -36,7 +36,7 @@ const main = async () => {
 		.then(() => console.log(`Mongo Connection: ${Constants.mongoUrl}`))
 		.catch((err) => console.log(err));
 
-	const port = process.env.PORT??3000;
+	const port = process.env.PORT??3001;
 	app.listen(port, () => {
 		console.log(Constants.serviceName + " : " + Constants.version);
 		console.log(`HTTP ${Constants.serviceName} on ${port}!`);

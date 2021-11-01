@@ -42,6 +42,7 @@ const schema = new mongoose.Schema<ProjectInterface>({
         },
       ],
     },
+    default: {},
   },
   currentResources:{type:Number,default:0},
   transactions: [

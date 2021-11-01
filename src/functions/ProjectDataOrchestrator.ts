@@ -33,15 +33,15 @@ export default class ProjectDataOrchestrator{
 
     //TODO
     static async changeResourcesToProject(userId: string,action: "checkin" | "checkout", totalResources: number, amount: number, hwSetId: string,hwSetName: string,projectId: string):Promise<boolean> {
-        const res=ProjectDataOrchestrator.getProject(projectId);
+        const res= await ProjectDataOrchestrator.getProject(projectId);
         if(res == null){
             return false;
         }else{
             if(action=="checkin"){
                 amount=-amount;
             }
-            const project = await ProjectModel.findOne({projectId:projectId});
-            if(project.resources[hwSetId]==null)
+            const project = await ProjectModel.findOne({projectId:projectId}).lean(true);
+            if(project.resources[hwSetId]??null===null)
             {
                 project.resources[hwSetId]={
                     totalResources:0,
@@ -62,7 +62,7 @@ export default class ProjectDataOrchestrator{
             
             
             project.currentResources+=amount;
-            await project.save();
+            await ProjectModel.updateOne({projectId:projectId},project);
             return true;
         }
         
