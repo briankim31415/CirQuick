@@ -2,6 +2,9 @@ import ProjectModel,{ProjectInterface} from "../models/ProjectModel";
 import { v4 as uuidv4 } from 'uuid';
 
 export default class ProjectDataOrchestrator{
+    static getAllProjects(): ProjectInterface[] | PromiseLike<ProjectInterface[]> {
+        return ProjectModel.find();
+    }
     static async addUser(userId: string, projectId: string) {
         await ProjectModel.updateOne({projectId:projectId},{
             $addToSet:{usersJoined:userId}
@@ -65,6 +68,9 @@ export default class ProjectDataOrchestrator{
 
     static async getProject(projectId:string):Promise<ProjectInterface|null>{
         return await ProjectModel.findOne({projectId:projectId})??null;
+    }
+    static async getProjects(name:string):Promise<ProjectInterface[]>{
+        return await ProjectModel.find({$text: {$search: name}});
     }
     static async getName(projectId: string): Promise<string> {
         return ((await ProjectModel.findOne({projectId:projectId}))??{name:"Unknown"}).name;

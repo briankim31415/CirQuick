@@ -53,5 +53,5 @@ const schema = new mongoose.Schema<ProjectInterface>({
     },
   ],
 });
-
+schema.index({name: 'text'});
 export default mongoose.model<ProjectInterface>("projects", schema);

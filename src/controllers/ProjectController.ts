@@ -2,7 +2,7 @@ import ProjectDataOrchestrator from "../functions/ProjectDataOrchestrator";
 import UserDataOrchestrator from "../functions/UserDataOrchestrator";
 import { ProjectInterface } from "../models/ProjectModel";
 import { HttpStatusCode } from "../utils/ErrorCodes";
-import { Body, Controller, Post, Route, Get } from "tsoa";
+import { Body, Controller, Post, Route, Get, Query } from "tsoa";
 
 @Route("project")
 export class ProjectController extends Controller {
@@ -33,5 +33,15 @@ export class ProjectController extends Controller {
     public async addUserToProject(@Body() body:{userId:string, projectId:string}){
         await UserDataOrchestrator.addProjectToUser(body.userId,body.projectId,"member");
         await ProjectDataOrchestrator.addUser(body.userId,body.projectId);
+    }
+
+    @Get()
+    public async getAllProjects(@Query() name?:string):Promise<ProjectInterface[]>{
+        const res = await ProjectDataOrchestrator.getProjects(name??"");
+        if(res.length==0){
+            return await ProjectDataOrchestrator.getAllProjects();
+        }else{
+            return res;
+        }
     }
 }

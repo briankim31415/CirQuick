@@ -22,8 +22,8 @@ export default class UserDataOrchestrator{
         });
     }
 
-    static userExists(userId: string):Promise<boolean> {
-        throw new Error("Method not implemented.");
+    static async userExists(userId: string):Promise<boolean> {
+        return (await UserModel.countDocuments({userId:userId})) > 0;
     }
 
     static async getProjectsUserIsPartOf(userId:string):Promise<{projectId:string, role:string}[]>{
