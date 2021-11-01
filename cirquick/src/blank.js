@@ -4,12 +4,12 @@ import './Popup.css';
 import './Body.css';
 import {Link, useParams} from 'react-router-dom';
 import Popup from './Popup';
-import Cirquick from './CirQuick-backend-client';
-const client = new Cirquick.DefaultApi({basePath:"https://cirquick.herokuapp.com"});
+import {DefaultApi} from 'cirquick';
+import axios from 'axios';
+const client = new DefaultApi({basePath:"https://cirquick.herokuapp.com"});
 
 function Blank() {
-    const {username} = useParams;
-    
+    const {userId} = useParams()//test user is gonna be 0a3b60a9-eed7-4892-b480-dc1c3336f8e9, username is dog, pass is cat;
     const[buttonPopup, setButtonPopup] = useState(false);
 
     return (
@@ -60,7 +60,7 @@ function Blank() {
 
                 <div>
                     <Drop />
-                    <ProjectBody userName = {username} projectID = "Project1"/>
+                    <ProjectBody userName={userId} projectId="d225bd8c-f517-481d-ad29-ae68344a9da8"/>
                 </div>
             </div>
         </div>
@@ -108,9 +108,9 @@ class ProjectBody extends Component {
 
     constructor() {
         super()
-            
         this.state = {
-            projectName: this.props.projectID, //this comes from the value of the drop down
+            projectId: "d225bd8c-f517-481d-ad29-ae68344a9da8",
+            projectName: "n", //this comes from the value of the drop down
             resources: ["HW Set 1", "HW Set 2"], //hard coded for now
             totalResoucesUsed: null, //1
             projectResources: [], //1
@@ -122,35 +122,39 @@ class ProjectBody extends Component {
     }
 
     componentDidMount() {
-        //1        
-        client.getProject({
-            id: this.state.projectName,
-        }).then(response => response.json())
-        .then(data => {
+        //1   
+        client.getProject(
+            "d225bd8c-f517-481d-ad29-ae68344a9da8"
+        )
+        .then(res => {
             this.setState({
-                totalResourcesUsed: data.currentResources,
-                projectResources: [data.resources.HW_SET_1.totalResouces, data.resources.HW_SET_2.totalResouces],
-                userResources: [data.resources.HW_SET_1.usersCheckedOut.find(x=>x.checkedOutBy === this.props.userName).amount,
-                    data.resources.resources.HW_SET_2.usersCheckedOut.find(x=>x.checkedOutBy === this.props.userName).amount]
+                totalResourcesUsed: res.data.currentResources,
+                projectResources: [1,1],
+                userResources: [1,1],
+                projectName: res.data.name,
+                // projectResources: [res.data.resources.HW_SET_1.totalResouces, res.data.resources.HW_SET_2.totalResouces],
+                // userResources: [res.data.resources.HW_SET_1.usersCheckedOut.find(x=>x.checkedOutBy === this.props.userName).amount,
+                //     res.data.resources.resources.HW_SET_2.usersCheckedOut.find(x=>x.checkedOutBy === this.props.userName).amount]
             })
         });
 
         //2
         client.getResource({
             id: "HW_SET_1"
-        }).then(response => response.json())
-        .then(data => {
+        })
+        .then(res => {
             this.setState({
-                availability: [data.availability],
-                capacity: [data.capacity]
+                availability: [res.data.availability],
+                capacity: [res.data.capacity]
             })
         })
 
         //3
         client.getResource({
             id: "HW_SET_2"
-        }).then(response => response.json())
-        .then(data => {
+        })
+        .then(res => {
+            let data = res.data;
             this.setState( prevState => ({
                 availability: [prevState.availability, data.availability],
                 capacity: [prevState.capacity, data.capacity]
