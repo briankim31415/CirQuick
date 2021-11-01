@@ -49,10 +49,18 @@ export default class ProjectDataOrchestrator{
                 };
             }
             project.resources[hwSetId].totalResources += amount;
-            project.resources[hwSetId].usersCheckedOut.push({
-                amount:amount,
-                checkedOutBy:userId
-            });
+            if(project.resources[hwSetId].usersCheckedOut.find(record => record.checkedOutBy === userId)==null)
+            {
+                project.resources[hwSetId].usersCheckedOut.push({
+                    amount:amount,
+                    checkedOutBy:userId
+                });
+            }
+            else{
+                project.resources[hwSetId].usersCheckedOut.find(record => record.checkedOutBy === userId).amount+=amount;
+            }
+            
+            
             project.currentResources+=amount;
             await project.save();
             return true;
