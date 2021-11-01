@@ -40,15 +40,21 @@ export default class ProjectDataOrchestrator{
             if(action=="checkin"){
                 amount=-amount;
             }
-            await ProjectModel.updateOne({userId:userId},{currentResources:(await res).currentResources+amount},{
-                $set:{"resources.$hwSetId":{
-                    totalResources:totalResources,
-                        $push:{usersCheckedOut:{
-                                amount:amount,
-                                checkedOutBy:userId
-                            }}
-                }}
+            const project = await ProjectModel.findOne({projectId:projectId});
+            if(project.resources[hwSetId]==null)
+            {
+                project.resources[hwSetId]={
+                    totalResources:0,
+                    usersCheckedOut:[]
+                };
+            }
+            project.resources[hwSetId].totalResources += amount;
+            project.resources[hwSetId].usersCheckedOut.push({
+                amount:amount,
+                checkedOutBy:userId
             });
+            project.currentResources+=amount;
+            await project.save();
             return true;
         }
         

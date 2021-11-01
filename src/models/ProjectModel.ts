@@ -43,6 +43,7 @@ const schema = new mongoose.Schema<ProjectInterface>({
       ],
     },
   },
+  currentResources:{type:Number,default:0},
   transactions: [
     {
       action: { type: String, enum: ["checkin", "checkout"] },

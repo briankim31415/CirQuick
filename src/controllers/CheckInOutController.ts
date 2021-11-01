@@ -2,7 +2,7 @@ import ProjectDataOrchestrator from "../functions/ProjectDataOrchestrator";
 import UserDataOrchestrator from "../functions/UserDataOrchestrator";
 import CheckInOutOrchestrator from "../functions/CheckInOutOrchestrator";
 import ResourceDataOrchestrator from "../functions/ResourceDataOrchestrator";
-import { ProjectInterface } from "../models/ProjectModel";
+import ProjectModel,{ ProjectInterface } from "../models/ProjectModel";
 import { HttpStatusCode } from "../utils/ErrorCodes";
 import { Body, Controller, Post, Route, Get } from "tsoa";
 
@@ -45,13 +45,13 @@ export class CheckInOutController extends Controller {
         }
 
         const res = await ResourceDataOrchestrator.getResourceData(body.hwSetId);
-
+        const project = await ProjectModel.findOne({projectId:body.projectId});
         if(res==null){
             this.setStatus(HttpStatusCode.NOT_FOUND);
             return {error: "hwSet does not exist"}
         }
         
-        if(res.availablity<body.amount){
+        if(project.resources[body.hwSetId].totalResources<body.amount){
             this.setStatus(HttpStatusCode.BAD_REQUEST);
             return {error: "Request amount out of range"}
         }
