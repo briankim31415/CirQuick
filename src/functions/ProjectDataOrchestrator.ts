@@ -41,8 +41,9 @@ export default class ProjectDataOrchestrator{
                 amount=-amount;
             }
             const project = await ProjectModel.findOne({projectId:projectId}).lean(true);
-            if(project.resources[hwSetId]??null===null)
+            if(project.resources[hwSetId]===undefined)
             {
+                console.log("Not Find hwset");
                 project.resources[hwSetId]={
                     totalResources:0,
                     usersCheckedOut:[]
@@ -59,8 +60,6 @@ export default class ProjectDataOrchestrator{
             else{
                 project.resources[hwSetId].usersCheckedOut.find(record => record.checkedOutBy === userId).amount+=amount;
             }
-            
-            
             project.currentResources+=amount;
             await ProjectModel.updateOne({projectId:projectId},project);
             return true;

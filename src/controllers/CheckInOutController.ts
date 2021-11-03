@@ -45,13 +45,12 @@ export class CheckInOutController extends Controller {
         }
 
         const res = await ResourceDataOrchestrator.getResourceData(body.hwSetId);
-        const project = await ProjectModel.findOne({projectId:body.projectId});
+        const project = await ProjectModel.findOne({projectId:body.projectId}).lean(true);
         if(res==null){
             this.setStatus(HttpStatusCode.NOT_FOUND);
             return {error: "hwSet does not exist"}
         }
-        
-        if(project.resources[body.hwSetId].totalResources<body.amount){
+        if(project.resources[body.hwSetId].usersCheckedOut.find(record => record.checkedOutBy === body.userId).amount<body.amount){
             this.setStatus(HttpStatusCode.BAD_REQUEST);
             return {error: "Request amount out of range"}
         }
