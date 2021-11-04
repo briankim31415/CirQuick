@@ -39,23 +39,11 @@ function Blank() {
                     <br/>
                     <br/>
                     
-                    <input id = "searchID" className = "sidebar-input" type = "input" placeholder="Search Project ID"/>
-                    <br/>
-                    <br/>
-                    <button className = "sidebar-button">Join Project</button>
+                    <JoinProject userName = {username}/>
                 </div>
 
                 <div className = "login">
-                    <Popup trigger = {buttonPopup} setTrigger = {setButtonPopup}>
-                        <h2>Add New Project</h2>
-                        <input id = "name" type = "input" placeholder="Name"/>
-                        <br/>
-                        <input id = "description" type = "input" placeholder="Description"/>
-                        <br/>
-                        <input id = "projectID" type = "input" placeholder="Project ID"/>
-                        <br/>   
-                        <button className = "button">Add</button>
-                    </Popup>
+                    <PopupForm userName = {username} button = {buttonPopup} setButton = {setButtonPopup}/>
                 </div>
 
                 <div>
@@ -270,6 +258,142 @@ class Form extends Component {
         )
     }
 
+}
+
+class PopupForm extends Component {
+    constructor() {
+        super ();
+
+        this.state = {
+            name: null, // Name of project
+            desc: null, // Description of project
+        };
+        
+        this.handleAdd = this.handleAdd.bind(this);
+    }
+
+    handleAdd(e) {
+        const name = this.state.name;
+        const desc = this.state.desc;
+        var invalid_input = false;
+
+        // Check for valid input
+        if (name === "" || desc === "") {
+            invalid_input = true;
+            e.preventDefault();
+            alert('Invalid input - please try again');
+        }
+
+        if (!invalid_input) {
+            try {
+                // Check if project ID already exists
+                client.getProject({
+                    id: name    // **Check if right variable!
+                });
+
+                e.preventDefault();
+                alert('Project already exists - please try again');
+            } catch (error) {
+                // Create project and add user to it
+                client.createProject({
+                    "userId": this.props.userName,
+                    "description": desc,
+                    "name": name
+                }).then(res => {
+                    console.log(res.data);
+                }).catch(err => console.log(err));
+
+                client.addUserToProject({
+                    "projectId": name,   // **Check if right variable!
+                    "userId": this.props.userName
+                }).then(res => {
+                    console.log(res.data);
+                }).catch(err => console.log(err));
+
+                // Close popup window
+                this.props.setTrigger(false);   // **Need to check if this works
+
+                // Does any reloading need to happen?
+            }
+        }
+    }
+
+    render () {
+        return (
+            <Popup trigger = {this.props.button} setTrigger = {this.props.setButton}>
+                <h2>Add New Project</h2>
+                <input 
+                    id = "name" 
+                    type = "text" 
+                    placeholder="Name" 
+                    value = {this.state.name} 
+                    onChange = {(e) => this.setState(e.target.value)}
+                />
+                <br/>
+                <input 
+                    id = "description" 
+                    type = "text" 
+                    placeholder="Description" 
+                    value = {this.state.desc} 
+                    onChange = {(e) => this.setState(e.target.value)}
+                />
+                <br/>   
+                <button className = "button" onClick = {this.handleAdd}>Add</button>
+            </Popup>
+        )
+    }
+}
+
+class JoinProject extends Component {
+    constructor() {
+        super ();
+
+        this.state = {
+            name: null, // Name of project
+        };
+        
+        this.handleJoin = this.handleJoin.bind(this);
+    }
+
+    handleJoin(e) {
+        const name = this.state.name;
+
+        try {
+            // Find project
+            client.getProject({
+                id: name     // **Check if right variable!
+            });
+
+            // Add user to project
+            client.addUserToProject({
+                "projectId": name,   // **Check if right variable!
+                "userId": this.props.userName
+            }).then(res => {
+                console.log(res.data);
+            }).catch(err => console.log(err));            
+        } catch (error) {
+            e.preventDefault();
+            alert('Project does not exist - please try again');
+        }
+    }
+
+    render () {
+        return (
+            <div>
+                <input 
+                    id = "searchID" 
+                    className = "sidebar-input" 
+                    type = "text" 
+                    placeholder="Search Project Name"
+                    value = {this.state.name}
+                    onChange = {this.handleChange}
+                />
+                <br/>
+                <br/>
+                <button className = "sidebar-button" onClick = {this.handleJoin}>Join Project</button>
+            </div>
+        )
+    }
 }
 
 export default Blank;
