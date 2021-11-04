@@ -330,8 +330,6 @@ class PopupForm extends Component {
 
                 // Close popup window
                 this.props.setTrigger(false);   // **Need to check if this works
-
-                // Does any reloading need to happen?
             }
         }
     }
