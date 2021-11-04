@@ -4,12 +4,11 @@ import './Popup.css';
 import './Body.css';
 import {Link, useParams} from 'react-router-dom';
 import Popup from './Popup';
-import Cirquick from './CirQuick-backend-client';
-const client = new Cirquick.DefaultApi({basePath:"https://cirquick.herokuapp.com"});
+import {DefaultApi} from 'cirquick';
+const client = new DefaultApi({basePath:"https://cirquick.herokuapp.com"});
 
 function Blank() {
-    const {username} = useParams;
-    
+    const {userId} = useParams()//test user is gonna be 0a3b60a9-eed7-4892-b480-dc1c3336f8e9, username is dog, pass is cat;
     const[buttonPopup, setButtonPopup] = useState(false);
 
     return (
@@ -48,7 +47,7 @@ function Blank() {
 
                 <div>
                     <Drop />
-                    <ProjectBody userName = {username} projectID = "Project1"/>
+                    <ProjectBody userId={userId} projectId="d225bd8c-f517-481d-ad29-ae68344a9da8"/>
                 </div>
             </div>
         </div>
@@ -94,11 +93,11 @@ class Drop extends Component {
 
 class ProjectBody extends Component {
 
-    constructor() {
-        super()
-            
+    constructor(props) {
+        super(props)
         this.state = {
-            projectName: this.props.projectID, //this comes from the value of the drop down
+            projectId: props.projectId,
+            projectName: "", //this comes from the value of the drop down
             resources: ["HW Set 1", "HW Set 2"], //hard coded for now
             totalResoucesUsed: null, //1
             projectResources: [], //1
@@ -110,40 +109,59 @@ class ProjectBody extends Component {
     }
 
     componentDidMount() {
-        //1        
-        client.getProject({
-            id: this.state.projectName,
-        }).then(response => response.json())
-        .then(data => {
+        //1   
+        client.getProject(
+            this.state.projectId,
+        )
+        .then(res => {
+            let userResources = [];
+            let item = res.data.resources.HW_SET_1.usersCheckedOut.filter(user => user.checkedOutBy === this.props.userId)
+            if(item.length<1){
+                userResources.push(0)
+            }
+            else{
+                userResources.push(item[0].amount)
+            }
+            item = res.data.resources.HW_SET_2.usersCheckedOut.filter(user => user.checkedOutBy === this.props.userId)
+            if(item.length<1){
+                userResources.push(0)
+            }
+            else{
+                userResources.push(item[0].amount)
+            }
             this.setState({
-                totalResourcesUsed: data.currentResources,
-                projectResources: [data.resources.HW_SET_1.totalResouces, data.resources.HW_SET_2.totalResouces],
-                userResources: [data.resources.HW_SET_1.usersCheckedOut.find(x=>x.checkedOutBy === this.props.userName).amount,
-                    data.resources.resources.HW_SET_2.usersCheckedOut.find(x=>x.checkedOutBy === this.props.userName).amount]
+                ...this.state,
+                totalResourcesUsed: res.data.currentResources,
+                projectResources: [1,1],
+                userResources: [1,1],
+                projectName: res.data.name,
+                projectResources: [res.data.resources.HW_SET_1.totalResources, res.data.resources.HW_SET_2.totalResources],
+                userResources: userResources,
             })
         });
 
+        let availability = [];
+        let capacity = [];
         //2
-        client.getResource({
-            id: "HW_SET_1"
-        }).then(response => response.json())
-        .then(data => {
+        Promise.all([
+            client.getResource(
+                "HW_SET_1"
+            ),
+            client.getResource(
+                "HW_SET_2"
+            ),
+        ]).then(res => {
+            availability.push(res[0].data.availablity);
+            availability.push(res[1].data.availablity);
+            capacity.push(res[0].data.capacity);
+            capacity.push(res[1].data.capacity);
             this.setState({
-                availability: [data.availability],
-                capacity: [data.capacity]
+                ...this.state,
+                availability: availability,
+                capacity: capacity
             })
         })
 
-        //3
-        client.getResource({
-            id: "HW_SET_2"
-        }).then(response => response.json())
-        .then(data => {
-            this.setState( prevState => ({
-                availability: [prevState.availability, data.availability],
-                capacity: [prevState.capacity, data.capacity]
-            }))
-        })
 
     }
 
@@ -161,7 +179,7 @@ class ProjectBody extends Component {
                                         <h3>Resources Used by You: {this.state.userResources[0]}</h3>
                                         <h3>Resources Available: {this.state.availability[0]} / {this.state.capacity[0]}</h3>
                                     </div>
-                                    <Form user = {this.props.userName} project = {this.props.projectID} resName = {this.state.resources[0]} userRes = {this.state.userResources[0]} cap = {this.state.capacity[0]} ava = {this.state.availability[0]} cli = {client}/>
+                                    <Form user = {this.props.userId} project = {this.props.projectId} resName = {"HW_SET_1"} userRes = {this.state.userResources[0]} cap = {this.state.capacity[0]} ava = {this.state.availability[0]} cli = {client}/>
                                 </div>
                         </div>
                         
@@ -173,7 +191,7 @@ class ProjectBody extends Component {
                                         <h3>Resources Used by You: {this.state.userResources[1]}</h3>
                                         <h3>Resources Available: {this.state.availability[1]} / {this.state.capacity[1]}</h3>
                                     </div>
-                                    <Form user = {this.props.userName} project = {this.props.projectID} resName = {this.state.resources[1]} userRes = {this.state.userResources[1]} cap = {this.state.capacity[1]} ava = {this.state.availability[1]}/>
+                                    <Form user = {this.props.userId} project = {this.props.projectId} resName = {"HW_SET_2"} userRes = {this.state.userResources[1]} cap = {this.state.capacity[1]} ava = {this.state.availability[1]}/>
                                 </div>
                         </div>
                     </div>
@@ -185,8 +203,8 @@ class ProjectBody extends Component {
 }
 
 class Form extends Component {
-    constructor() {
-        super ()
+    constructor(props) {
+        super (props)
         this.state = {
             amount: null 
         }
@@ -208,10 +226,10 @@ class Form extends Component {
 
     handleCheckin(e) {
         const Checkin = this.state.amount
-
-        if (Checkin > this.props.user) {
-            alert('User does not have this many resources checked out - please try again');
             e.preventDefault();
+
+        if (Checkin > this.props.userRes) {
+            alert('User does not have this many resources checked out - please try again');
         }
         else {
             client.checkinResource({
@@ -227,10 +245,10 @@ class Form extends Component {
 
     handleCheckout(e) {
         const CheckOut = this.state.amount
+        e.preventDefault();
 
         if (CheckOut > this.props.ava) {
             alert('Not enough resources to checkout - please try again');
-            e.preventDefault();
         }
         else {
             client.checkoutResource({
@@ -247,7 +265,7 @@ class Form extends Component {
     render () {
         return (
             <form className = "checking">
-                <input type="text" name="check" placeholder="Amoun" value = {this.state.amount} onChange = {this.handleChange}/>
+                <input type="text" name="check" placeholder="Amount" value = {this.state.amount} onChange = {this.handleChange}/>
 
                 <div className="buttons">
                     <button className="button1" onClick = {this.handleCheckin}>Check In</button>
