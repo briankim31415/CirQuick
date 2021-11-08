@@ -16,7 +16,8 @@ export class UserController extends Controller {
         const usersProjects = await UserDataOrchestrator.getProjectsUserIsPartOf(userId);
         const promises = usersProjects.map(async project => {
             return {
-                ...project,
+                projectId: project.projectId,
+                role: project.role,
                 name: await ProjectDataOrchestrator.getName(project.projectId)
             }
         });
