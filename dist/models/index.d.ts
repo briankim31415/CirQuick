@@ -8,6 +8,7 @@ export * from './inline-response2003';
 export * from './inline-response2004';
 export * from './inline-response2005';
 export * from './inline-response2006';
+export * from './partial-resource-interface_';
 export * from './partial-user-interface-projects-joined';
 export * from './partial-user-interface-transactions';
 export * from './partial-user-interface_';
