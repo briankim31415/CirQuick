@@ -13,7 +13,7 @@ function App() {
 
         <Switch>
           <Route path="/signUp" exact component = {signUp}></Route>
-          <Route path="/dataSet" exact component = {datasets}></Route>
+          <Route path="/dataSet/:userId" exact component = {datasets}></Route>
           <Route path="/blank/:userId" component = {blank}></Route>
           <Route exact path="/" exact component = {Login}></Route>
         </Switch>

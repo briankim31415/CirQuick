@@ -3,83 +3,89 @@ import './App.css';
 import './Popup.css';
 import './Body.css';
 import {Link, useParams} from 'react-router-dom';
-import Popup from './Popup';
+import {withRouter} from "react-router";
 import {DefaultApi} from 'cirquick';
 const client = new DefaultApi({basePath:"https://cirquick.herokuapp.com"});
+//test user is gonna be 0a3b60a9-eed7-4892-b480-dc1c3336f8e9, username is dog, pass is cat;
 
-function Blank() {
-    const {userId} = useParams()//test user is gonna be 0a3b60a9-eed7-4892-b480-dc1c3336f8e9, username is dog, pass is cat;
-    const[buttonPopup, setButtonPopup] = useState(false);
+class Blank extends Component {    
+    constructor(props) {
+        super(props);
+        this.state = {
+            userID : this.props.match.params.userId,
+            dropdown : ""
+        }
 
-    return (
-        <div>
-            <h1 id = "head">CIRQUICK</h1>
+        this.handleProjectChange = this.handleProjectChange.bind(this)
+    }
 
-            <div class = "wrapper">
+    handleProjectChange = (event) => {
+        this.setState({
+            dropdown: event.target.value
+        })
+    }
 
-                <div class = "sidebar">
-                
-                    <button className = "sidebar-button" onClick = {() => setButtonPopup(true)}>Add New Project</button>
-                
-                    <br/>
-                    <br/>
-                    <br/>
-                
-                    <Link to = "/dataSet">
-                    <button className = "sidebar-button">Data Download</button>
-                    </Link>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <Link to = "/">
-                    <button className = "sidebar-button">Log Out</button>
-                    </Link>
-                    <br/>
-                    <br/>
-                    <br/>
+    render () {
+        return (
+            <div>
+                <h1 id = "head">CIRQUICK</h1>
+    
+                <div class = "wrapper">
+    
+                    <div class = "sidebar">                    
+                        <br/>
+                        <br/>
+                        <br/>
                     
-                    <input id = "searchID" className = "sidebar-input" type = "input" placeholder="Search Project ID"/>
-                    <br/>
-                    <br/>
-                    <button className = "sidebar-button">Join Project</button>
-                </div>
-
-                <div className = "login">
-                    <Popup trigger = {buttonPopup} setTrigger = {setButtonPopup}>
-                        <h2>Add New Project</h2>
-                        <input id = "name" type = "input" placeholder="Name"/>
+                        <Link to={`/dataSet/${this.state.userId}`}>
+                        <button className = "sidebar-button">Data Download</button>
+                        </Link>
                         <br/>
-                        <input id = "description" type = "input" placeholder="Description"/>
                         <br/>
-                        <input id = "projectID" type = "input" placeholder="Project ID"/>
-                        <br/>   
-                        <button className = "button">Add</button>
-                    </Popup>
-                </div>
+                        <br/>
+                        <Link to = "/">
+                        <button className = "sidebar-button">Log Out</button>
+                        </Link>
+                        <br/>
+                        <br/>
+                        <br/>
+                        
+                        <input id = "searchID" className = "sidebar-input" type = "input" placeholder="Search Project ID"/>
+                        <br/>
+                        <br/>
+                        <button className = "sidebar-button">Join Project</button>
+                    </div>
 
-                <div>
-                    <Drop />
-                    <ProjectBody userId={userId} projectId="d225bd8c-f517-481d-ad29-ae68344a9da8"/>
+                    <div>
+                        <Drop handler = {this.handleProjectChange} name = {this.state.dropdown}/>
+                        <ProjectBody userId={this.state.userId} projectId={this.state.dropdown}/>
+                    </div>
                 </div>
             </div>
-        </div>
-    )
+        )
+    }
 }
 
 class Drop extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        projectName : ''
+          projects: []
       }
     }
-  
-    handleProjectChange = (event) => {
-        this.setState({
-            projectName: event.target.value
-        })
-    }
 
+    componentDidMount() {
+        client.getUserProjects(
+            "0a3b60a9-eed7-4892-b480-dc1c3336f8e9"
+        )
+        .then( (res) => {
+            this.setState ({
+                projects: res.data
+            })
+        }
+        )
+    }
+  
     render() {
   
       return(
@@ -90,13 +96,14 @@ class Drop extends Component {
 
             <select 
                 className = "drop"
-                value = {this.state.projectName} 
-                onChange = {this.handleProjectChange}>
-              <option value = "project1">Project_1</option>
-              <option value = "project2">Project_2</option>
+                value = {this.props.name} 
+                onChange = {this.props.handler}>
+                {this.state.projects.map(project=>(
+                    <option value = {project.projectId}>{project.name}</option>
+                ))}
             </select>
-            <p>{this.state.projectName}</p>
           </form>
+          {console.log(this.props.name)}
         </div>
       );
   
@@ -121,26 +128,34 @@ class ProjectBody extends Component {
     }
 
     componentDidMount() {
+        if (this.state.projectId??null == null) {
+            return
+        }
         //1   
         client.getProject(
             this.state.projectId,
         )
         .then(res => {
             let userResources = [];
-            let item = res.data.resources.HW_SET_1.usersCheckedOut.filter(user => user.checkedOutBy === this.props.userId)
-            if(item.length<1){
-                userResources.push(0)
+            if(res.data.resources.HW_SET_1 !== undefined){
+                let item = res.data.resources.HW_SET_1.usersCheckedOut.filter(user => user.checkedOutBy === this.props.userId)
+                if(item.length<1){
+                    userResources.push(0)
+                }
+                else{
+                    userResources.push(item[0].amount)
+                }
             }
-            else{
-                userResources.push(item[0].amount)
+            if(res.data.resources.HW_SET_2 !== undefined){
+                let item = res.data.resources.HW_SET_2.usersCheckedOut.filter(user => user.checkedOutBy === this.props.userId)
+                if(item.length<1){
+                    userResources.push(0)
+                }
+                else{
+                    userResources.push(item[0].amount)
+                }
             }
-            item = res.data.resources.HW_SET_2.usersCheckedOut.filter(user => user.checkedOutBy === this.props.userId)
-            if(item.length<1){
-                userResources.push(0)
-            }
-            else{
-                userResources.push(item[0].amount)
-            }
+            
             this.setState({
                 ...this.state,
                 totalResourcesUsed: res.data.currentResources,
@@ -290,4 +305,4 @@ class Form extends Component {
 
 }
 
-export default Blank;
+export default withRouter(Blank);

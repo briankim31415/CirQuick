@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './App.css';
 import './datasets.css';
-import {Link} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table';
@@ -103,20 +103,27 @@ function StickyHeadTable() {
   );
 }
 
+function Buttons () {
+  const {userId} = useParams();
+  return(
+    <div>
+      <Link to={`/users/${userId}`}>
+        <button className = "button">User Home</button>
+      </Link>
+
+      <Link to = "/">
+        <button className = "button">Logout</button>
+      </Link>
+    </div>
+  );
+}
 export default function datasets() {
     return(
         <div className = "datasets">
             <h1 id = "header">CIRQUICK</h1>
             
             <br />
-            <div id = "buttons">
-                <Link to = "/blank">
-                    <button className = "button">User Home</button>
-                </Link> {''}
-                <Link to = "/">
-                    <button className = "button">Logout</button>
-                </Link>
-            </div>
+            <Buttons />
 
             <h2>Dataset Download</h2>
             <div id="table">

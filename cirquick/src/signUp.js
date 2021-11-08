@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "./App.css";
-import { Link } from "react-router-dom";
 import { DefaultApi } from "cirquick";
 const client = new DefaultApi({ basePath: "https://cirquick.herokuapp.com" });
 
