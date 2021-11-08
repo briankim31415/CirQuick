@@ -5,6 +5,8 @@ import './Body.css';
 import {Link, useParams} from 'react-router-dom';
 import {withRouter} from "react-router";
 import {DefaultApi} from 'cirquick';
+import Popup from './Popup.js'
+import Login from './login';
 const client = new DefaultApi({basePath:"https://cirquick.herokuapp.com"});
 //test user is gonna be 0a3b60a9-eed7-4892-b480-dc1c3336f8e9, username is dog, pass is cat;
 
@@ -12,7 +14,7 @@ class Blank extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userID : this.props.match.params.userId,
+            userId : this.props.match.params.userId,
             dropdown : ""
         }
 
@@ -36,7 +38,6 @@ class Blank extends Component {
                         <br/>
                         <br/>
                         <br/>
-                    
                         <Link to={`/dataSet/${this.state.userId}`}>
                         <button className = "sidebar-button">Data Download</button>
                         </Link>
@@ -53,15 +54,18 @@ class Blank extends Component {
                         <input id = "searchID" className = "sidebar-input" type = "input" placeholder="Search Project ID"/>
                         <br/>
                         <br/>
-                        <button className = "sidebar-button">Join Project</button>
+                        <JoinProject userName = {this.state.userId}/>
+                    </div>
+
+                    <div className = "login">
                     </div>
 
                     <div>
                         <Drop handler = {this.handleProjectChange} name = {this.state.dropdown}/>
-                        <ProjectBody userId={this.state.userId} projectId={this.state.dropdown}/>
                     </div>
-                </div>
+
             </div>
+        </div>
         )
     }
 }
@@ -72,6 +76,8 @@ class Drop extends Component {
       this.state = {
           projects: []
       }
+
+        this.handleDrop = this.handleDrop.bind(this)
     }
 
     componentDidMount() {
@@ -303,6 +309,140 @@ class Form extends Component {
         )
     }
 
+}
+
+class PopupForm extends Component {
+    constructor() {
+        super ();
+
+        this.state = {
+            name: null, // Name of project
+            desc: null, // Description of project
+        };
+        
+        this.handleAdd = this.handleAdd.bind(this);
+    }
+
+    handleAdd(e) {
+        const name = this.state.name;
+        const desc = this.state.desc;
+        var invalid_input = false;
+
+        // Check for valid input
+        if (name === "" || desc === "") {
+            invalid_input = true;
+            e.preventDefault();
+            alert('Invalid input - please try again');
+        }
+
+        if (!invalid_input) {
+            try {
+                // Check if project ID already exists
+                client.getProject({
+                    id: name    // **Check if right variable!
+                });
+
+                e.preventDefault();
+                alert('Project already exists - please try again');
+            } catch (error) {
+                // Create project and add user to it
+                client.createProject({
+                    "userId": this.props.userName,
+                    "description": desc,
+                    "name": name
+                }).then(res => {
+                    console.log(res.data);
+                }).catch(err => console.log(err));
+
+                client.addUserToProject({
+                    "projectId": name,   // **Check if right variable!
+                    "userId": this.props.userName
+                }).then(res => {
+                    console.log(res.data);
+                }).catch(err => console.log(err));
+
+                // Close popup window
+                this.props.setTrigger(false);   // **Need to check if this works
+            }
+        }
+    }
+
+    render () {
+        return (
+            <Popup trigger = {this.props.button} setTrigger = {this.props.setButton}>
+                <h2>Add New Project</h2>
+                <input 
+                    id = "name" 
+                    type = "text" 
+                    placeholder="Name" 
+                    value = {this.state.name} 
+                    onChange = {(e) => this.setState(e.target.value)}
+                />
+                <br/>
+                <input 
+                    id = "description" 
+                    type = "text" 
+                    placeholder="Description" 
+                    value = {this.state.desc} 
+                    onChange = {(e) => this.setState(e.target.value)}
+                />
+                <br/>   
+                <button className = "button" onClick = {this.handleAdd}>Add</button>
+            </Popup>
+        )
+    }
+}
+
+class JoinProject extends Component {
+    constructor() {
+        super ();
+
+        this.state = {
+            name: null, // Name of project
+        };
+        
+        this.handleJoin = this.handleJoin.bind(this);
+    }
+
+    handleJoin(e) {
+        const name = this.state.name;
+
+        try {
+            // Find project
+            client.getProject({
+                id: name     // **Check if right variable!
+            });
+
+            // Add user to project
+            client.addUserToProject({
+                "projectId": name,   // **Check if right variable!
+                "userId": this.props.userName
+            }).then(res => {
+                console.log(res.data);
+            }).catch(err => console.log(err));            
+        } catch (error) {
+            e.preventDefault();
+            alert('Project does not exist - please try again');
+        }
+    }
+
+    render () {
+        return (
+            <div>
+                <input 
+                    id = "searchID" 
+                    className = "sidebar-input" 
+                    type = "text" 
+                    placeholder="Search Project Name"
+                    value = {this.state.name}
+                    onChange = {this.handleChange}
+                />
+                <br/>
+                <br/>
+                <button className = "sidebar-button" onClick = {this.handleJoin}>Join Project</button>
+            </div>
+        )
+    }
 }
 
 export default withRouter(Blank);

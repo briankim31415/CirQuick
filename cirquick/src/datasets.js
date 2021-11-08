@@ -23,9 +23,8 @@ function createTable() {
   var index = 0;
   var data_list = [];
   while (data[index] != null) {
-    // var name = data[index].Name;
     var link = data[index].Link;
-    var name = <a href={link} target="_blank"> {data[index].Name} </a>;
+    var name = <a rel="noopener noreferrer" href={link} target="_blank"> {data[index].Name} </a>;
     var desc = data[index].Description;
     var download_link = data[index].Download;
     var download = <a href={download_link}> {download_link} </a>
