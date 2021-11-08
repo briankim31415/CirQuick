@@ -40,11 +40,11 @@ function Blank() {
                     <br/>
                     <br/>
                     
-                    <JoinProject userName = {username}/>
+                    <JoinProject userName = {userId}/>
                 </div>
 
                 <div className = "login">
-                    <PopupForm userName = {username} button = {buttonPopup} setButton = {setButtonPopup}/>
+                    <PopupForm userName = {userId} button = {buttonPopup} setButton = {setButtonPopup}/>
                 </div>
 
                 <div>
