@@ -5,15 +5,17 @@ import './Body.css';
 import {Link, useParams} from 'react-router-dom';
 import Popup from './Popup';
 import {DefaultApi} from 'cirquick';
+import Login from './login';
 const client = new DefaultApi({basePath:"https://cirquick.herokuapp.com"});
 
 function Blank() {
+    const {username} = useParams();
     const {userId} = useParams()//test user is gonna be 0a3b60a9-eed7-4892-b480-dc1c3336f8e9, username is dog, pass is cat;
     const[buttonPopup, setButtonPopup] = useState(false);
 
     return (
         <div>
-            <h1 id = "head">CIRQUICK</h1>
+            <h1 id = "head">CIRQUICK {username}</h1>
 
             <div class = "wrapper">
 
@@ -46,7 +48,7 @@ function Blank() {
                 </div>
 
                 <div>
-                    <Drop />
+                    <Drop username = {username}/>
                     <ProjectBody userId={userId} projectId="d225bd8c-f517-481d-ad29-ae68344a9da8"/>
                 </div>
             </div>
@@ -58,13 +60,26 @@ class Drop extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        projectName : ''
+        projectName : null,
+        projectId : props.projectId
       }
+
+        this.handleDrop = this.handleDrop.bind(this)
     }
-  
-    handleProjectChange = (event) => {
+
+    
+    handleDrop = (e) => {
+        let userProjects = [];
+        e.preventDefault();
+        client.getProject(
+            this.state.projectId
+        ).then(res => {
+            console.log(res.data);
+            userProjects.push(res[0].data.name);
+        })
         this.setState({
-            projectName: event.target.value
+            ...this.state, 
+            projectName: userProjects[0]
         })
     }
 
@@ -79,8 +94,8 @@ class Drop extends Component {
             <select 
                 className = "drop"
                 value = {this.state.projectName} 
-                onChange = {this.handleProjectChange}>
-              <option value = "project1">Project_1</option>
+                onChange = {this.handleDrop}>
+              <option value = {this.state.projectName}>{this.state.projectName}</option>
               <option value = "project2">Project_2</option>
             </select>
             <p>{this.state.projectName}</p>
