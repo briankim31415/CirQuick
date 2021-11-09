@@ -7,6 +7,7 @@ import {withRouter} from "react-router";
 import {DefaultApi} from 'cirquick';
 import Popup from './Popup.js'
 import Login from './login';
+import axios from "axios"
 const client = new DefaultApi({basePath:"https://cirquick.herokuapp.com"});
 //test user is gonna be 0a3b60a9-eed7-4892-b480-dc1c3336f8e9, username is dog, pass is cat;
 
@@ -319,52 +320,51 @@ class PopupForm extends Component {
 
         this.state = {
             name: null, // Name of project
-            desc: null, // Description of project
+            desc: null // Description of project
         };
         
+        this.handleNameChange = this.handleNameChange.bind(this);
+        this.handleDescChange = this.handleDescChange.bind(this);
         this.handleAdd = this.handleAdd.bind(this);
     }
 
+    handleNameChange(e) {
+        this.setState({
+            name: e.target.value
+        })
+    }
+
+    handleDescChange(e) {
+        this.setState({
+            desc: e.target.value
+        })
+    }
+
     handleAdd(e) {
-        const name = this.state.name;
-        const desc = this.state.desc;
-        var invalid_input = false;
+        let project_name = this.state.name;
+        let desc = this.state.desc;
+        let invalid_input = false;
+        e.preventDefault();
 
         // Check for valid input
-        if (name === "" || desc === "") {
+        if (project_name === null || desc === null) {
             invalid_input = true;
-            e.preventDefault();
             alert('Invalid input - please try again');
         }
 
         if (!invalid_input) {
+            // Create the project
             try {
-                // Check if project ID already exists
-                client.getProject({
-                    id: name    // **Check if right variable!
-                });
-
-                e.preventDefault();
-                alert('Project already exists - please try again');
-            } catch (error) {
-                // Create project and add user to it
                 client.createProject({
-                    "userId": this.props.userName,
+                    "userId": this.props.userId,
                     "description": desc,
-                    "name": name
+                    "name": project_name
                 }).then(res => {
                     console.log(res.data);
-                }).catch(err => console.log(err));
-
-                client.addUserToProject({
-                    "projectId": name,   // **Check if right variable!
-                    "userId": this.props.userName
-                }).then(res => {
-                    console.log(res.data);
-                }).catch(err => console.log(err));
-
-                // Close popup window
-                this.props.setTrigger(false);   // **Need to check if this works
+                }).catch(err => console.log(err)); 
+                alert('Project created');
+            } catch (error) {
+                alert('Could not add create project - please try again');
             }
         }
     }
@@ -378,7 +378,7 @@ class PopupForm extends Component {
                     type = "text" 
                     placeholder="Name" 
                     value = {this.state.name} 
-                    onChange = {(e) => this.setState(e.target.value)}
+                    onChange = {this.handleNameChange}
                 />
                 <br/>
                 <input 
@@ -386,7 +386,7 @@ class PopupForm extends Component {
                     type = "text" 
                     placeholder="Description" 
                     value = {this.state.desc} 
-                    onChange = {(e) => this.setState(e.target.value)}
+                    onChange = {this.handleDescChange}
                 />
                 <br/>   
                 <button className = "button" onClick = {this.handleAdd}>Add</button>
@@ -400,30 +400,40 @@ class JoinProject extends Component {
         super ();
 
         this.state = {
-            name: null, // Name of project
+            name: null
         };
         
+        this.handleChange = this.handleChange.bind(this);
         this.handleJoin = this.handleJoin.bind(this);
     }
 
-    handleJoin(e) {
-        const name = this.state.name;
+    handleChange(e) {
+        this.setState({
+            name: e.target.value
+        })
+    }
+
+    async handleJoin(e) {
+        const project_name = this.state.name;
+        e.preventDefault();
 
         try {
-            // Find project
-            client.getProject({
-                id: name     // **Check if right variable!
-            });
+            // Get project ID
+            const res = await axios.get(`https://cirquick.herokuapp.com/project?name=${project_name}`);
+            let pid = res.data[0].projectId;
+
+            // Check if project ID is correct
+            if (res.data[0].name !== project_name) { throw e; }
 
             // Add user to project
             client.addUserToProject({
-                "projectId": name,   // **Check if right variable!
-                "userId": this.props.userName
+                "projectId": pid,
+                "userId": this.props.userId
             }).then(res => {
                 console.log(res.data);
-            }).catch(err => console.log(err));            
+            }).catch(err => console.log(err));   
+            alert('Project successfully added');
         } catch (error) {
-            e.preventDefault();
             alert('Project does not exist - please try again');
         }
     }
