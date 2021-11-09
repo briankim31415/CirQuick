@@ -271,6 +271,7 @@ class Form extends Component {
                 "amount": Checkin,
                 "hwSetId": this.props.resName
             }).then(res => {
+                window.location.reload();
                 console.log(res.data);
             }).catch(err=>console.log(err));
         }
@@ -290,6 +291,7 @@ class Form extends Component {
                 "amount": CheckOut,
                 "hwSetId": this.props.resName
             }).then(res => {
+                window.location.reload();
                 console.log(res.data);
             }).catch(err=>console.log(err));
         }
