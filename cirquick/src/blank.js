@@ -83,7 +83,7 @@ class Drop extends Component {
 
     componentDidMount() {
         client.getUserProjects(
-            "0a3b60a9-eed7-4892-b480-dc1c3336f8e9"
+            "0a3b60a9-eed7-4892-b480-dc1c3336f8e9" //TODO ..............................................................................
         )
         .then( (res) => {
             this.setState ({
@@ -143,25 +143,30 @@ class ProjectBody extends Component {
             this.state.projectId,
         )
         .then(res => {
+            const defaultCase ={
+                usersCheckedOut: [],
+                totalResources:0
+            }
             let userResources = [];
-            if(res.data.resources.HW_SET_1 !== undefined){
-                let item = res.data.resources.HW_SET_1.usersCheckedOut.filter(user => user.checkedOutBy === this.props.userId)
-                if(item.length<1){
-                    userResources.push(0)
-                }
-                else{
-                    userResources.push(item[0].amount)
-                }
+            let set1 = res.data.resources.HW_SET_1??defaultCase;
+            let set2 = res.data.resources.HW_SET_2??defaultCase;
+            
+            let item = set1.usersCheckedOut.filter(user => user.checkedOutBy === this.props.userId)
+            if(item.length<1){
+                userResources.push(0)
             }
-            if(res.data.resources.HW_SET_2 !== undefined){
-                let item = res.data.resources.HW_SET_2.usersCheckedOut.filter(user => user.checkedOutBy === this.props.userId)
-                if(item.length<1){
-                    userResources.push(0)
-                }
-                else{
-                    userResources.push(item[0].amount)
-                }
+            else{
+                userResources.push(item[0].amount)
             }
+        
+            item = set2.usersCheckedOut.filter(user => user.checkedOutBy === this.props.userId)
+            if(item.length<1){
+                userResources.push(0)
+            }
+            else{
+                userResources.push(item[0].amount)
+            }
+            
             
             this.setState({
                 ...this.state,
@@ -169,7 +174,7 @@ class ProjectBody extends Component {
                 projectResources: [1,1],
                 userResources: [1,1],
                 projectName: res.data.name,
-                projectResources: [res.data.resources.HW_SET_1.totalResources, res.data.resources.HW_SET_2.totalResources],
+                projectResources: [set1.totalResources, set2.totalResources],
                 userResources: userResources,
             })
         });
