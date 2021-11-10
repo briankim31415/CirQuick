@@ -106,7 +106,7 @@ function Buttons () {
   const {userId} = useParams();
   return(
     <div>
-      <Link to={`/users/${userId}`}>
+      <Link to={`/blank/${userId}`}>
         <button className = "button">User Home</button>
       </Link>
 

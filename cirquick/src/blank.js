@@ -16,10 +16,18 @@ class Blank extends Component {
         super(props);
         this.state = {
             userId : this.props.match.params.userId,
-            dropdown : ""
+            dropdown : "",
+            buttonPopup: false,
         }
 
+        this.handlePopup = this.handlePopup.bind(this)
         this.handleProjectChange = this.handleProjectChange.bind(this)
+    }
+
+    handlePopup = (e) => {
+        this.setState({
+            buttonPopup: !this.state.buttonPopup
+        })
     }
 
     handleProjectChange = (event) => {
@@ -34,40 +42,34 @@ class Blank extends Component {
                 <h1 id = "head">CIRQUICK</h1>
     
                 <div class = "wrapper">
-    
-                    <div class = "sidebar">                    
+                    <div class = "sidebar">  
+                            <button className = "sidebar-button" onClick = {this.handlePopup}>Add New Project</button>                  
                         <br/>
                         <br/>
                         <br/>
                         <Link to={`/dataSet/${this.state.userId}`}>
-                        <button className = "sidebar-button">Data Download</button>
+                            <button className = "sidebar-button">Data Download</button>
                         </Link>
                         <br/>
                         <br/>
                         <br/>
                         <Link to = "/">
-                        <button className = "sidebar-button">Log Out</button>
+                            <button className = "sidebar-button">Log Out</button>
                         </Link>
                         <br/>
                         <br/>
                         <br/>
-                        
-                        <input id = "searchID" className = "sidebar-input" type = "input" placeholder="Search Project ID"/>
-                        <br/>
-                        <br/>
-                        <JoinProject userId = {this.state.userId}/>
+                            <JoinProject userName = {this.state.userId}/>
+                            <PopupForm userName = {this.state.userId} pop = {this.handlePopup} buttonPopup={this.state.buttonPopup}/>
                     </div>
-
-                    <div className = "login">
-                        {/* <PopupForm userId = {this.state.userId} button = {buttonPopup} setButton = {setButtonPopup}/> */}
-                    </div>
-
+                    
                     <div>
                         <Drop handler = {this.handleProjectChange} name = {this.state.dropdown}/>
+                        <ProjectBody userId={this.state.userId} projectId={this.state.dropdown}/>
                     </div>
 
+                </div>
             </div>
-        </div>
         )
     }
 }
@@ -78,8 +80,6 @@ class Drop extends Component {
       this.state = {
           projects: []
       }
-
-        this.handleDrop = this.handleDrop.bind(this)
     }
 
     componentDidMount() {
@@ -149,8 +149,8 @@ class ProjectBody extends Component {
                 totalResources:0
             }
             let userResources = [];
-            let set1 = res.data.resources.HW_SET_1??defaultCase;
-            let set2 = res.data.resources.HW_SET_2??defaultCase;
+            let set1 = res.data.resources??{}.HW_SET_1??defaultCase;
+            let set2 = res.data.resources??{}.HW_SET_2??defaultCase;
             
             let item = set1.usersCheckedOut.filter(user => user.checkedOutBy === this.props.userId)
             if(item.length<1){
@@ -321,19 +321,19 @@ class Form extends Component {
 }
 
 class PopupForm extends Component {
-    constructor() {
-        super ();
+    constructor(props) {
+        super (props);
 
         this.state = {
             name: null, // Name of project
-            desc: null // Description of project
+            desc: null, // Description of project
         };
-        
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleDescChange = this.handleDescChange.bind(this);
         this.handleAdd = this.handleAdd.bind(this);
     }
 
+    
     handleNameChange(e) {
         this.setState({
             name: e.target.value
@@ -377,33 +377,36 @@ class PopupForm extends Component {
 
     render () {
         return (
-            <Popup trigger = {this.props.button} setTrigger = {this.props.setButton}>
-                <h2>Add New Project</h2>
-                <input 
-                    id = "name" 
-                    type = "text" 
-                    placeholder="Name" 
-                    value = {this.state.name} 
-                    onChange = {this.handleNameChange}
-                />
-                <br/>
-                <input 
-                    id = "description" 
-                    type = "text" 
-                    placeholder="Description" 
-                    value = {this.state.desc} 
-                    onChange = {this.handleDescChange}
-                />
-                <br/>   
-                <button className = "button" onClick = {this.handleAdd}>Add</button>
-            </Popup>
+            <div className = "pop">
+                {console.log(this.props.buttonPopup)}
+                {this.props.buttonPopup ? <Popup trigger = {this.props.pop}>
+                    <h2>Add New Project</h2>
+                    <input 
+                        id = "name" 
+                        type = "text" 
+                        placeholder="Name" 
+                        value = {this.state.name} 
+                        onChange = {this.handleNameChange}
+                    />
+                    <br/>
+                    <input 
+                        id = "description" 
+                        type = "text" 
+                        placeholder="Description" 
+                        value = {this.state.desc} 
+                        onChange = {this.handleDescChange}
+                    />
+                    <br/>   
+                    <button className = "button" onClick = {this.handleAdd}>Add</button>
+                </Popup>: null}
+         </div>
         )
     }
 }
 
 class JoinProject extends Component {
-    constructor() {
-        super ();
+    constructor(props) {
+        super (props);
 
         this.state = {
             name: null
