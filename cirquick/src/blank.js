@@ -55,10 +55,11 @@ class Blank extends Component {
                         <input id = "searchID" className = "sidebar-input" type = "input" placeholder="Search Project ID"/>
                         <br/>
                         <br/>
-                        <JoinProject userName = {this.state.userId}/>
+                        <JoinProject userId = {this.state.userId}/>
                     </div>
 
                     <div className = "login">
+                        {/* <PopupForm userId = {this.state.userId} button = {buttonPopup} setButton = {setButtonPopup}/> */}
                     </div>
 
                     <div>
