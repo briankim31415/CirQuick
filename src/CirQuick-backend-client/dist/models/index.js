@@ -7,7 +7,7 @@ var __createBinding = (this && this.__createBinding) || (Object.create ? (functi
     o[k2] = m[k];
 }));
 var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./checkinout-checkin-body"), exports);
@@ -20,6 +20,7 @@ __exportStar(require("./inline-response2003"), exports);
 __exportStar(require("./inline-response2004"), exports);
 __exportStar(require("./inline-response2005"), exports);
 __exportStar(require("./inline-response2006"), exports);
+__exportStar(require("./partial-resource-interface_"), exports);
 __exportStar(require("./partial-user-interface-projects-joined"), exports);
 __exportStar(require("./partial-user-interface-transactions"), exports);
 __exportStar(require("./partial-user-interface_"), exports);

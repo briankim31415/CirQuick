@@ -4,7 +4,7 @@ import './Popup.css';
 import './Body.css';
 import {Link, useParams} from 'react-router-dom';
 import {withRouter} from "react-router";
-import {DefaultApi} from 'cirquick';
+import {DefaultApi} from './CirQuick-backend-client';
 import Popup from './Popup.js'
 import Login from './login';
 import axios from "axios"

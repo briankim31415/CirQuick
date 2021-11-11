@@ -22,9 +22,11 @@ import { InlineResponse2003 } from '../models';
 import { InlineResponse2004 } from '../models';
 import { InlineResponse2005 } from '../models';
 import { InlineResponse2006 } from '../models';
+import { PartialResourceInterface_ } from '../models';
 import { PartialUserInterface_ } from '../models';
 import { ProjectAddUserBody } from '../models';
 import { ProjectCreateBody } from '../models';
+import { ProjectInterface } from '../models';
 import { ResetBody } from '../models';
 import { SigninBody } from '../models';
 import { SignupBody } from '../models';
@@ -63,11 +65,25 @@ export declare const DefaultApiAxiosParamCreator: (configuration?: Configuration
     createProject: (body: ProjectCreateBody, options?: any) => Promise<RequestArgs>;
     /**
      *
+     * @param {PartialResourceInterface_} body
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createResource: (body: PartialResourceInterface_, options?: any) => Promise<RequestArgs>;
+    /**
+     *
      * @param {EchoBody} body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     exampleEcho: (body: EchoBody, options?: any) => Promise<RequestArgs>;
+    /**
+     *
+     * @param {string} [name]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getAllProjects: (name?: string, options?: any) => Promise<RequestArgs>;
     /**
      *
      * @param {string} id
@@ -153,11 +169,25 @@ export declare const DefaultApiFp: (configuration?: Configuration) => {
     createProject(body: ProjectCreateBody, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2002>>;
     /**
      *
+     * @param {PartialResourceInterface_} body
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createResource(body: PartialResourceInterface_, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>>;
+    /**
+     *
      * @param {EchoBody} body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     exampleEcho(body: EchoBody, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2005>>;
+    /**
+     *
+     * @param {string} [name]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getAllProjects(name?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ProjectInterface>>>;
     /**
      *
      * @param {string} id
@@ -243,11 +273,25 @@ export declare const DefaultApiFactory: (configuration?: Configuration, basePath
     createProject(body: ProjectCreateBody, options?: any): AxiosPromise<InlineResponse2002>;
     /**
      *
+     * @param {PartialResourceInterface_} body
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createResource(body: PartialResourceInterface_, options?: any): AxiosPromise<boolean>;
+    /**
+     *
      * @param {EchoBody} body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     exampleEcho(body: EchoBody, options?: any): AxiosPromise<InlineResponse2005>;
+    /**
+     *
+     * @param {string} [name]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getAllProjects(name?: string, options?: any): AxiosPromise<Array<ProjectInterface>>;
     /**
      *
      * @param {string} id
@@ -339,12 +383,28 @@ export declare class DefaultApi extends BaseAPI {
     createProject(body: ProjectCreateBody, options?: any): Promise<import("axios").AxiosResponse<InlineResponse2002>>;
     /**
      *
+     * @param {PartialResourceInterface_} body
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    createResource(body: PartialResourceInterface_, options?: any): Promise<import("axios").AxiosResponse<boolean>>;
+    /**
+     *
      * @param {EchoBody} body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
     exampleEcho(body: EchoBody, options?: any): Promise<import("axios").AxiosResponse<InlineResponse2005>>;
+    /**
+     *
+     * @param {string} [name]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    getAllProjects(name?: string, options?: any): Promise<import("axios").AxiosResponse<ProjectInterface[]>>;
     /**
      *
      * @param {string} id

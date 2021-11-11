@@ -3,10 +3,12 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -82,7 +84,7 @@ var base_1 = require("../base");
  * DefaultApi - axios parameter creator
  * @export
  */
-exports.DefaultApiAxiosParamCreator = function (configuration) {
+var DefaultApiAxiosParamCreator = function (configuration) {
     var _this = this;
     return {
         /**
@@ -259,6 +261,49 @@ exports.DefaultApiAxiosParamCreator = function (configuration) {
         },
         /**
          *
+         * @param {PartialResourceInterface_} body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createResource: function (body, options) {
+            if (options === void 0) { options = {}; }
+            return __awaiter(_this, void 0, void 0, function () {
+                var localVarPath, localVarUrlObj, baseOptions, localVarRequestOptions, localVarHeaderParameter, localVarQueryParameter, query, key, key, headersFromBaseOptions, needsSerialization;
+                return __generator(this, function (_a) {
+                    // verify required parameter 'body' is not null or undefined
+                    if (body === null || body === undefined) {
+                        throw new base_1.RequiredError('body', 'Required parameter body was null or undefined when calling createResource.');
+                    }
+                    localVarPath = "/resource/create";
+                    localVarUrlObj = new URL(localVarPath, 'https://example.com');
+                    if (configuration) {
+                        baseOptions = configuration.baseOptions;
+                    }
+                    localVarRequestOptions = __assign(__assign({ method: 'POST' }, baseOptions), options);
+                    localVarHeaderParameter = {};
+                    localVarQueryParameter = {};
+                    localVarHeaderParameter['Content-Type'] = 'application/json';
+                    query = new URLSearchParams(localVarUrlObj.search);
+                    for (key in localVarQueryParameter) {
+                        query.set(key, localVarQueryParameter[key]);
+                    }
+                    for (key in options.query) {
+                        query.set(key, options.query[key]);
+                    }
+                    localVarUrlObj.search = (new URLSearchParams(query)).toString();
+                    headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+                    localVarRequestOptions.headers = __assign(__assign(__assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
+                    needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+                    localVarRequestOptions.data = needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
+                    return [2 /*return*/, {
+                            url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                            options: localVarRequestOptions,
+                        }];
+                });
+            });
+        },
+        /**
+         *
          * @param {EchoBody} body
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -294,6 +339,45 @@ exports.DefaultApiAxiosParamCreator = function (configuration) {
                     localVarRequestOptions.headers = __assign(__assign(__assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
                     needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
                     localVarRequestOptions.data = needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
+                    return [2 /*return*/, {
+                            url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                            options: localVarRequestOptions,
+                        }];
+                });
+            });
+        },
+        /**
+         *
+         * @param {string} [name]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllProjects: function (name, options) {
+            if (options === void 0) { options = {}; }
+            return __awaiter(_this, void 0, void 0, function () {
+                var localVarPath, localVarUrlObj, baseOptions, localVarRequestOptions, localVarHeaderParameter, localVarQueryParameter, query, key, key, headersFromBaseOptions;
+                return __generator(this, function (_a) {
+                    localVarPath = "/project";
+                    localVarUrlObj = new URL(localVarPath, 'https://example.com');
+                    if (configuration) {
+                        baseOptions = configuration.baseOptions;
+                    }
+                    localVarRequestOptions = __assign(__assign({ method: 'GET' }, baseOptions), options);
+                    localVarHeaderParameter = {};
+                    localVarQueryParameter = {};
+                    if (name !== undefined) {
+                        localVarQueryParameter['name'] = name;
+                    }
+                    query = new URLSearchParams(localVarUrlObj.search);
+                    for (key in localVarQueryParameter) {
+                        query.set(key, localVarQueryParameter[key]);
+                    }
+                    for (key in options.query) {
+                        query.set(key, options.query[key]);
+                    }
+                    localVarUrlObj.search = (new URLSearchParams(query)).toString();
+                    headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+                    localVarRequestOptions.headers = __assign(__assign(__assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
                     return [2 /*return*/, {
                             url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
                             options: localVarRequestOptions,
@@ -600,11 +684,12 @@ exports.DefaultApiAxiosParamCreator = function (configuration) {
         },
     };
 };
+exports.DefaultApiAxiosParamCreator = DefaultApiAxiosParamCreator;
 /**
  * DefaultApi - functional programming interface
  * @export
  */
-exports.DefaultApiFp = function (configuration) {
+var DefaultApiFp = function (configuration) {
     return {
         /**
          *
@@ -617,7 +702,7 @@ exports.DefaultApiFp = function (configuration) {
                 var localVarAxiosArgs;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, exports.DefaultApiAxiosParamCreator(configuration).addUserToProject(body, options)];
+                        case 0: return [4 /*yield*/, (0, exports.DefaultApiAxiosParamCreator)(configuration).addUserToProject(body, options)];
                         case 1:
                             localVarAxiosArgs = _a.sent();
                             return [2 /*return*/, function (axios, basePath) {
@@ -641,7 +726,7 @@ exports.DefaultApiFp = function (configuration) {
                 var localVarAxiosArgs;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, exports.DefaultApiAxiosParamCreator(configuration).checkinResource(body, options)];
+                        case 0: return [4 /*yield*/, (0, exports.DefaultApiAxiosParamCreator)(configuration).checkinResource(body, options)];
                         case 1:
                             localVarAxiosArgs = _a.sent();
                             return [2 /*return*/, function (axios, basePath) {
@@ -665,7 +750,7 @@ exports.DefaultApiFp = function (configuration) {
                 var localVarAxiosArgs;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, exports.DefaultApiAxiosParamCreator(configuration).checkoutResource(body, options)];
+                        case 0: return [4 /*yield*/, (0, exports.DefaultApiAxiosParamCreator)(configuration).checkoutResource(body, options)];
                         case 1:
                             localVarAxiosArgs = _a.sent();
                             return [2 /*return*/, function (axios, basePath) {
@@ -689,7 +774,31 @@ exports.DefaultApiFp = function (configuration) {
                 var localVarAxiosArgs;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, exports.DefaultApiAxiosParamCreator(configuration).createProject(body, options)];
+                        case 0: return [4 /*yield*/, (0, exports.DefaultApiAxiosParamCreator)(configuration).createProject(body, options)];
+                        case 1:
+                            localVarAxiosArgs = _a.sent();
+                            return [2 /*return*/, function (axios, basePath) {
+                                    if (axios === void 0) { axios = axios_1.default; }
+                                    if (basePath === void 0) { basePath = base_1.BASE_PATH; }
+                                    var axiosRequestArgs = __assign(__assign({}, localVarAxiosArgs.options), { url: basePath + localVarAxiosArgs.url });
+                                    return axios.request(axiosRequestArgs);
+                                }];
+                    }
+                });
+            });
+        },
+        /**
+         *
+         * @param {PartialResourceInterface_} body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createResource: function (body, options) {
+            return __awaiter(this, void 0, void 0, function () {
+                var localVarAxiosArgs;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, (0, exports.DefaultApiAxiosParamCreator)(configuration).createResource(body, options)];
                         case 1:
                             localVarAxiosArgs = _a.sent();
                             return [2 /*return*/, function (axios, basePath) {
@@ -713,7 +822,31 @@ exports.DefaultApiFp = function (configuration) {
                 var localVarAxiosArgs;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, exports.DefaultApiAxiosParamCreator(configuration).exampleEcho(body, options)];
+                        case 0: return [4 /*yield*/, (0, exports.DefaultApiAxiosParamCreator)(configuration).exampleEcho(body, options)];
+                        case 1:
+                            localVarAxiosArgs = _a.sent();
+                            return [2 /*return*/, function (axios, basePath) {
+                                    if (axios === void 0) { axios = axios_1.default; }
+                                    if (basePath === void 0) { basePath = base_1.BASE_PATH; }
+                                    var axiosRequestArgs = __assign(__assign({}, localVarAxiosArgs.options), { url: basePath + localVarAxiosArgs.url });
+                                    return axios.request(axiosRequestArgs);
+                                }];
+                    }
+                });
+            });
+        },
+        /**
+         *
+         * @param {string} [name]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllProjects: function (name, options) {
+            return __awaiter(this, void 0, void 0, function () {
+                var localVarAxiosArgs;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, (0, exports.DefaultApiAxiosParamCreator)(configuration).getAllProjects(name, options)];
                         case 1:
                             localVarAxiosArgs = _a.sent();
                             return [2 /*return*/, function (axios, basePath) {
@@ -737,7 +870,7 @@ exports.DefaultApiFp = function (configuration) {
                 var localVarAxiosArgs;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, exports.DefaultApiAxiosParamCreator(configuration).getProject(id, options)];
+                        case 0: return [4 /*yield*/, (0, exports.DefaultApiAxiosParamCreator)(configuration).getProject(id, options)];
                         case 1:
                             localVarAxiosArgs = _a.sent();
                             return [2 /*return*/, function (axios, basePath) {
@@ -761,7 +894,7 @@ exports.DefaultApiFp = function (configuration) {
                 var localVarAxiosArgs;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, exports.DefaultApiAxiosParamCreator(configuration).getResource(id, options)];
+                        case 0: return [4 /*yield*/, (0, exports.DefaultApiAxiosParamCreator)(configuration).getResource(id, options)];
                         case 1:
                             localVarAxiosArgs = _a.sent();
                             return [2 /*return*/, function (axios, basePath) {
@@ -785,7 +918,7 @@ exports.DefaultApiFp = function (configuration) {
                 var localVarAxiosArgs;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, exports.DefaultApiAxiosParamCreator(configuration).getUserProjects(userId, options)];
+                        case 0: return [4 /*yield*/, (0, exports.DefaultApiAxiosParamCreator)(configuration).getUserProjects(userId, options)];
                         case 1:
                             localVarAxiosArgs = _a.sent();
                             return [2 /*return*/, function (axios, basePath) {
@@ -809,7 +942,7 @@ exports.DefaultApiFp = function (configuration) {
                 var localVarAxiosArgs;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, exports.DefaultApiAxiosParamCreator(configuration).reset(body, options)];
+                        case 0: return [4 /*yield*/, (0, exports.DefaultApiAxiosParamCreator)(configuration).reset(body, options)];
                         case 1:
                             localVarAxiosArgs = _a.sent();
                             return [2 /*return*/, function (axios, basePath) {
@@ -833,7 +966,7 @@ exports.DefaultApiFp = function (configuration) {
                 var localVarAxiosArgs;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, exports.DefaultApiAxiosParamCreator(configuration).signin(body, options)];
+                        case 0: return [4 /*yield*/, (0, exports.DefaultApiAxiosParamCreator)(configuration).signin(body, options)];
                         case 1:
                             localVarAxiosArgs = _a.sent();
                             return [2 /*return*/, function (axios, basePath) {
@@ -857,7 +990,7 @@ exports.DefaultApiFp = function (configuration) {
                 var localVarAxiosArgs;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, exports.DefaultApiAxiosParamCreator(configuration).signup(body, options)];
+                        case 0: return [4 /*yield*/, (0, exports.DefaultApiAxiosParamCreator)(configuration).signup(body, options)];
                         case 1:
                             localVarAxiosArgs = _a.sent();
                             return [2 /*return*/, function (axios, basePath) {
@@ -881,7 +1014,7 @@ exports.DefaultApiFp = function (configuration) {
                 var localVarAxiosArgs;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, exports.DefaultApiAxiosParamCreator(configuration).updateUser(body, options)];
+                        case 0: return [4 /*yield*/, (0, exports.DefaultApiAxiosParamCreator)(configuration).updateUser(body, options)];
                         case 1:
                             localVarAxiosArgs = _a.sent();
                             return [2 /*return*/, function (axios, basePath) {
@@ -896,11 +1029,12 @@ exports.DefaultApiFp = function (configuration) {
         },
     };
 };
+exports.DefaultApiFp = DefaultApiFp;
 /**
  * DefaultApi - factory interface
  * @export
  */
-exports.DefaultApiFactory = function (configuration, basePath, axios) {
+var DefaultApiFactory = function (configuration, basePath, axios) {
     return {
         /**
          *
@@ -909,7 +1043,7 @@ exports.DefaultApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         addUserToProject: function (body, options) {
-            return exports.DefaultApiFp(configuration).addUserToProject(body, options).then(function (request) { return request(axios, basePath); });
+            return (0, exports.DefaultApiFp)(configuration).addUserToProject(body, options).then(function (request) { return request(axios, basePath); });
         },
         /**
          *
@@ -918,7 +1052,7 @@ exports.DefaultApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         checkinResource: function (body, options) {
-            return exports.DefaultApiFp(configuration).checkinResource(body, options).then(function (request) { return request(axios, basePath); });
+            return (0, exports.DefaultApiFp)(configuration).checkinResource(body, options).then(function (request) { return request(axios, basePath); });
         },
         /**
          *
@@ -927,7 +1061,7 @@ exports.DefaultApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         checkoutResource: function (body, options) {
-            return exports.DefaultApiFp(configuration).checkoutResource(body, options).then(function (request) { return request(axios, basePath); });
+            return (0, exports.DefaultApiFp)(configuration).checkoutResource(body, options).then(function (request) { return request(axios, basePath); });
         },
         /**
          *
@@ -936,7 +1070,16 @@ exports.DefaultApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         createProject: function (body, options) {
-            return exports.DefaultApiFp(configuration).createProject(body, options).then(function (request) { return request(axios, basePath); });
+            return (0, exports.DefaultApiFp)(configuration).createProject(body, options).then(function (request) { return request(axios, basePath); });
+        },
+        /**
+         *
+         * @param {PartialResourceInterface_} body
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createResource: function (body, options) {
+            return (0, exports.DefaultApiFp)(configuration).createResource(body, options).then(function (request) { return request(axios, basePath); });
         },
         /**
          *
@@ -945,7 +1088,16 @@ exports.DefaultApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         exampleEcho: function (body, options) {
-            return exports.DefaultApiFp(configuration).exampleEcho(body, options).then(function (request) { return request(axios, basePath); });
+            return (0, exports.DefaultApiFp)(configuration).exampleEcho(body, options).then(function (request) { return request(axios, basePath); });
+        },
+        /**
+         *
+         * @param {string} [name]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllProjects: function (name, options) {
+            return (0, exports.DefaultApiFp)(configuration).getAllProjects(name, options).then(function (request) { return request(axios, basePath); });
         },
         /**
          *
@@ -954,7 +1106,7 @@ exports.DefaultApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         getProject: function (id, options) {
-            return exports.DefaultApiFp(configuration).getProject(id, options).then(function (request) { return request(axios, basePath); });
+            return (0, exports.DefaultApiFp)(configuration).getProject(id, options).then(function (request) { return request(axios, basePath); });
         },
         /**
          *
@@ -963,7 +1115,7 @@ exports.DefaultApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         getResource: function (id, options) {
-            return exports.DefaultApiFp(configuration).getResource(id, options).then(function (request) { return request(axios, basePath); });
+            return (0, exports.DefaultApiFp)(configuration).getResource(id, options).then(function (request) { return request(axios, basePath); });
         },
         /**
          *
@@ -972,7 +1124,7 @@ exports.DefaultApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         getUserProjects: function (userId, options) {
-            return exports.DefaultApiFp(configuration).getUserProjects(userId, options).then(function (request) { return request(axios, basePath); });
+            return (0, exports.DefaultApiFp)(configuration).getUserProjects(userId, options).then(function (request) { return request(axios, basePath); });
         },
         /**
          *
@@ -981,7 +1133,7 @@ exports.DefaultApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         reset: function (body, options) {
-            return exports.DefaultApiFp(configuration).reset(body, options).then(function (request) { return request(axios, basePath); });
+            return (0, exports.DefaultApiFp)(configuration).reset(body, options).then(function (request) { return request(axios, basePath); });
         },
         /**
          *
@@ -990,7 +1142,7 @@ exports.DefaultApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         signin: function (body, options) {
-            return exports.DefaultApiFp(configuration).signin(body, options).then(function (request) { return request(axios, basePath); });
+            return (0, exports.DefaultApiFp)(configuration).signin(body, options).then(function (request) { return request(axios, basePath); });
         },
         /**
          *
@@ -999,7 +1151,7 @@ exports.DefaultApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         signup: function (body, options) {
-            return exports.DefaultApiFp(configuration).signup(body, options).then(function (request) { return request(axios, basePath); });
+            return (0, exports.DefaultApiFp)(configuration).signup(body, options).then(function (request) { return request(axios, basePath); });
         },
         /**
          *
@@ -1008,10 +1160,11 @@ exports.DefaultApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         updateUser: function (body, options) {
-            return exports.DefaultApiFp(configuration).updateUser(body, options).then(function (request) { return request(axios, basePath); });
+            return (0, exports.DefaultApiFp)(configuration).updateUser(body, options).then(function (request) { return request(axios, basePath); });
         },
     };
 };
+exports.DefaultApiFactory = DefaultApiFactory;
 /**
  * DefaultApi - object-oriented interface
  * @export
@@ -1032,7 +1185,7 @@ var DefaultApi = /** @class */ (function (_super) {
      */
     DefaultApi.prototype.addUserToProject = function (body, options) {
         var _this = this;
-        return exports.DefaultApiFp(this.configuration).addUserToProject(body, options).then(function (request) { return request(_this.axios, _this.basePath); });
+        return (0, exports.DefaultApiFp)(this.configuration).addUserToProject(body, options).then(function (request) { return request(_this.axios, _this.basePath); });
     };
     /**
      *
@@ -1043,7 +1196,7 @@ var DefaultApi = /** @class */ (function (_super) {
      */
     DefaultApi.prototype.checkinResource = function (body, options) {
         var _this = this;
-        return exports.DefaultApiFp(this.configuration).checkinResource(body, options).then(function (request) { return request(_this.axios, _this.basePath); });
+        return (0, exports.DefaultApiFp)(this.configuration).checkinResource(body, options).then(function (request) { return request(_this.axios, _this.basePath); });
     };
     /**
      *
@@ -1054,7 +1207,7 @@ var DefaultApi = /** @class */ (function (_super) {
      */
     DefaultApi.prototype.checkoutResource = function (body, options) {
         var _this = this;
-        return exports.DefaultApiFp(this.configuration).checkoutResource(body, options).then(function (request) { return request(_this.axios, _this.basePath); });
+        return (0, exports.DefaultApiFp)(this.configuration).checkoutResource(body, options).then(function (request) { return request(_this.axios, _this.basePath); });
     };
     /**
      *
@@ -1065,7 +1218,18 @@ var DefaultApi = /** @class */ (function (_super) {
      */
     DefaultApi.prototype.createProject = function (body, options) {
         var _this = this;
-        return exports.DefaultApiFp(this.configuration).createProject(body, options).then(function (request) { return request(_this.axios, _this.basePath); });
+        return (0, exports.DefaultApiFp)(this.configuration).createProject(body, options).then(function (request) { return request(_this.axios, _this.basePath); });
+    };
+    /**
+     *
+     * @param {PartialResourceInterface_} body
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    DefaultApi.prototype.createResource = function (body, options) {
+        var _this = this;
+        return (0, exports.DefaultApiFp)(this.configuration).createResource(body, options).then(function (request) { return request(_this.axios, _this.basePath); });
     };
     /**
      *
@@ -1076,7 +1240,18 @@ var DefaultApi = /** @class */ (function (_super) {
      */
     DefaultApi.prototype.exampleEcho = function (body, options) {
         var _this = this;
-        return exports.DefaultApiFp(this.configuration).exampleEcho(body, options).then(function (request) { return request(_this.axios, _this.basePath); });
+        return (0, exports.DefaultApiFp)(this.configuration).exampleEcho(body, options).then(function (request) { return request(_this.axios, _this.basePath); });
+    };
+    /**
+     *
+     * @param {string} [name]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    DefaultApi.prototype.getAllProjects = function (name, options) {
+        var _this = this;
+        return (0, exports.DefaultApiFp)(this.configuration).getAllProjects(name, options).then(function (request) { return request(_this.axios, _this.basePath); });
     };
     /**
      *
@@ -1087,7 +1262,7 @@ var DefaultApi = /** @class */ (function (_super) {
      */
     DefaultApi.prototype.getProject = function (id, options) {
         var _this = this;
-        return exports.DefaultApiFp(this.configuration).getProject(id, options).then(function (request) { return request(_this.axios, _this.basePath); });
+        return (0, exports.DefaultApiFp)(this.configuration).getProject(id, options).then(function (request) { return request(_this.axios, _this.basePath); });
     };
     /**
      *
@@ -1098,7 +1273,7 @@ var DefaultApi = /** @class */ (function (_super) {
      */
     DefaultApi.prototype.getResource = function (id, options) {
         var _this = this;
-        return exports.DefaultApiFp(this.configuration).getResource(id, options).then(function (request) { return request(_this.axios, _this.basePath); });
+        return (0, exports.DefaultApiFp)(this.configuration).getResource(id, options).then(function (request) { return request(_this.axios, _this.basePath); });
     };
     /**
      *
@@ -1109,7 +1284,7 @@ var DefaultApi = /** @class */ (function (_super) {
      */
     DefaultApi.prototype.getUserProjects = function (userId, options) {
         var _this = this;
-        return exports.DefaultApiFp(this.configuration).getUserProjects(userId, options).then(function (request) { return request(_this.axios, _this.basePath); });
+        return (0, exports.DefaultApiFp)(this.configuration).getUserProjects(userId, options).then(function (request) { return request(_this.axios, _this.basePath); });
     };
     /**
      *
@@ -1120,7 +1295,7 @@ var DefaultApi = /** @class */ (function (_super) {
      */
     DefaultApi.prototype.reset = function (body, options) {
         var _this = this;
-        return exports.DefaultApiFp(this.configuration).reset(body, options).then(function (request) { return request(_this.axios, _this.basePath); });
+        return (0, exports.DefaultApiFp)(this.configuration).reset(body, options).then(function (request) { return request(_this.axios, _this.basePath); });
     };
     /**
      *
@@ -1131,7 +1306,7 @@ var DefaultApi = /** @class */ (function (_super) {
      */
     DefaultApi.prototype.signin = function (body, options) {
         var _this = this;
-        return exports.DefaultApiFp(this.configuration).signin(body, options).then(function (request) { return request(_this.axios, _this.basePath); });
+        return (0, exports.DefaultApiFp)(this.configuration).signin(body, options).then(function (request) { return request(_this.axios, _this.basePath); });
     };
     /**
      *
@@ -1142,7 +1317,7 @@ var DefaultApi = /** @class */ (function (_super) {
      */
     DefaultApi.prototype.signup = function (body, options) {
         var _this = this;
-        return exports.DefaultApiFp(this.configuration).signup(body, options).then(function (request) { return request(_this.axios, _this.basePath); });
+        return (0, exports.DefaultApiFp)(this.configuration).signup(body, options).then(function (request) { return request(_this.axios, _this.basePath); });
     };
     /**
      *
@@ -1153,7 +1328,7 @@ var DefaultApi = /** @class */ (function (_super) {
      */
     DefaultApi.prototype.updateUser = function (body, options) {
         var _this = this;
-        return exports.DefaultApiFp(this.configuration).updateUser(body, options).then(function (request) { return request(_this.axios, _this.basePath); });
+        return (0, exports.DefaultApiFp)(this.configuration).updateUser(body, options).then(function (request) { return request(_this.axios, _this.basePath); });
     };
     return DefaultApi;
 }(base_1.BaseAPI));

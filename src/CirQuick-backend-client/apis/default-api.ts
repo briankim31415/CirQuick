@@ -26,9 +26,11 @@ import { InlineResponse2003 } from '../models';
 import { InlineResponse2004 } from '../models';
 import { InlineResponse2005 } from '../models';
 import { InlineResponse2006 } from '../models';
+import { PartialResourceInterface_ } from '../models';
 import { PartialUserInterface_ } from '../models';
 import { ProjectAddUserBody } from '../models';
 import { ProjectCreateBody } from '../models';
+import { ProjectInterface } from '../models';
 import { ResetBody } from '../models';
 import { SigninBody } from '../models';
 import { SignupBody } from '../models';
@@ -208,6 +210,48 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @param {PartialResourceInterface_} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createResource: async (body: PartialResourceInterface_, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'body' is not null or undefined
+            if (body === null || body === undefined) {
+                throw new RequiredError('body','Required parameter body was null or undefined when calling createResource.');
+            }
+            const localVarPath = `/resource/create`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const query = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                query.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                query.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(query)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {EchoBody} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -244,6 +288,44 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             const needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
             localVarRequestOptions.data =  needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} [name] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllProjects: async (name?: string, options: any = {}): Promise<RequestArgs> => {
+            const localVarPath = `/project`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (name !== undefined) {
+                localVarQueryParameter['name'] = name;
+            }
+
+            const query = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                query.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.query) {
+                query.set(key, options.query[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(query)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -601,12 +683,38 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {PartialResourceInterface_} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createResource(body: PartialResourceInterface_, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>> {
+            const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).createResource(body, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
          * @param {EchoBody} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         async exampleEcho(body: EchoBody, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<InlineResponse2005>> {
             const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).exampleEcho(body, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @param {string} [name] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAllProjects(name?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ProjectInterface>>> {
+            const localVarAxiosArgs = await DefaultApiAxiosParamCreator(configuration).getAllProjects(name, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -750,12 +858,30 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
+         * @param {PartialResourceInterface_} body 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createResource(body: PartialResourceInterface_, options?: any): AxiosPromise<boolean> {
+            return DefaultApiFp(configuration).createResource(body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {EchoBody} body 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
         exampleEcho(body: EchoBody, options?: any): AxiosPromise<InlineResponse2005> {
             return DefaultApiFp(configuration).exampleEcho(body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} [name] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllProjects(name?: string, options?: any): AxiosPromise<Array<ProjectInterface>> {
+            return DefaultApiFp(configuration).getAllProjects(name, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -872,6 +998,16 @@ export class DefaultApi extends BaseAPI {
     }
     /**
      * 
+     * @param {PartialResourceInterface_} body 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public createResource(body: PartialResourceInterface_, options?: any) {
+        return DefaultApiFp(this.configuration).createResource(body, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * 
      * @param {EchoBody} body 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -879,6 +1015,16 @@ export class DefaultApi extends BaseAPI {
      */
     public exampleEcho(body: EchoBody, options?: any) {
         return DefaultApiFp(this.configuration).exampleEcho(body, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * 
+     * @param {string} [name] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public getAllProjects(name?: string, options?: any) {
+        return DefaultApiFp(this.configuration).getAllProjects(name, options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * 

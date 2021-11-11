@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import './App.css';
 import './Popup.css';
 import {Link} from 'react-router-dom';
-import { DefaultApi } from "cirquick";
+import { DefaultApi } from "./CirQuick-backend-client";
 const client = new DefaultApi({ basePath: "https://cirquick.herokuapp.com" });
 
 class Login extends Component {
