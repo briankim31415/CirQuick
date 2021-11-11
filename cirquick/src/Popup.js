@@ -13,7 +13,7 @@ class Popup extends Component {
     }
    
     handleTrigger = (e) => {
-     this.props.trigger();
+        this.props.trigger();
     }
    
     render() {

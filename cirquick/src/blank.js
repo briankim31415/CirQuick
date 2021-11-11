@@ -8,6 +8,7 @@ import {DefaultApi} from 'cirquick';
 import Popup from './Popup.js'
 import Login from './login';
 import axios from "axios"
+import { queryAllByAttribute } from '@testing-library/react';
 const client = new DefaultApi({basePath:"https://cirquick.herokuapp.com"});
 //test user is gonna be 0a3b60a9-eed7-4892-b480-dc1c3336f8e9, username is dog, pass is cat;
 
@@ -39,7 +40,7 @@ class Blank extends Component {
     render () {
         return (
             <div>
-                <h1 id = "head">CIRQUICK</h1>
+                <h1 id = "header">CIRQUICK</h1>
     
                 <div class = "wrapper">
                     <div class = "sidebar">  
@@ -62,14 +63,13 @@ class Blank extends Component {
                             <JoinProject userName = {this.state.userId}/>
                             <PopupForm userName = {this.state.userId} pop = {this.handlePopup} buttonPopup={this.state.buttonPopup}/>
                     </div>
-                    
-                    <div>
-                        <Drop handler = {this.handleProjectChange} name = {this.state.dropdown}/>
+                    <div class = "main">
+                        <Drop handler = {this.handleProjectChange} dropdown = {this.state.dropdown} userID = {this.state.userId}/>
                         <ProjectBody userId={this.state.userId} projectId={this.state.dropdown}/>
                     </div>
-
                 </div>
             </div>
+
         )
     }
 }
@@ -84,7 +84,7 @@ class Drop extends Component {
 
     componentDidMount() {
         client.getUserProjects(
-            "0a3b60a9-eed7-4892-b480-dc1c3336f8e9" //TODO ..............................................................................
+            this.props.userID 
         )
         .then( (res) => {
             this.setState ({
@@ -104,14 +104,13 @@ class Drop extends Component {
 
             <select 
                 className = "drop"
-                value = {this.props.name} 
                 onChange = {this.props.handler}>
                 {this.state.projects.map(project=>(
                     <option value = {project.projectId}>{project.name}</option>
                 ))}
             </select>
           </form>
-          {console.log(this.props.name)}
+          {console.log(this.props.dropdown)}
         </div>
       );
   
@@ -123,7 +122,7 @@ class ProjectBody extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            projectId: props.projectId,
+            projectId: this.props.projectId,
             projectName: "", //this comes from the value of the drop down
             resources: ["HW Set 1", "HW Set 2"], //hard coded for now
             totalResoucesUsed: null, //1
@@ -132,6 +131,78 @@ class ProjectBody extends Component {
             availability: [110, 50], //2,3
             capacity: [150,100], //2,3
             lastchecked: []
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.projectId !== prevProps.projectId) {
+            this.setState({
+                projectId: this.props.projectId
+            })
+            if (this.state.projectId??null == null) {
+                return
+            }
+            //1   
+            client.getProject(
+                this.state.projectId,
+            )
+            .then(res => {
+                const defaultCase ={
+                    usersCheckedOut: [],
+                    totalResources:0
+                }
+                let userResources = [];
+                let project = res.data[0]
+                let set1 = project.resources.HW_SET_1??defaultCase;
+                let set2 = project.resources.HW_SET_2??defaultCase;
+                
+                let item = set1.usersCheckedOut.filter(user => user.checkedOutBy === this.props.userId)
+                if(item.length<1){
+                    userResources.push(0)
+                }
+                else{
+                    userResources.push(item[0].amount)
+                }
+            
+                item = set2.usersCheckedOut.filter(user => user.checkedOutBy === this.props.userId)
+                if(item.length<1){
+                    userResources.push(0)
+                }
+                else{
+                    userResources.push(item[0].amount)
+                }
+                
+                
+                this.setState({
+                    ...this.state,
+                    totalResourcesUsed: res.data[0].currentResources,
+                    projectName: res.data[0].name,
+                    projectResources: [set1.totalResources, set2.totalResources],
+                    userResources: userResources,
+                })
+            });
+    
+            let availability = [];
+            let capacity = [];
+            //2
+            Promise.all([
+                client.getResource(
+                    "HW_SET_1"
+                ),
+                client.getResource(
+                    "HW_SET_2"
+                ),
+            ]).then(res => {
+                availability.push(res[0].data.availablity);
+                availability.push(res[1].data.availablity);
+                capacity.push(res[0].data.capacity);
+                capacity.push(res[1].data.capacity);
+                this.setState({
+                    ...this.state,
+                    availability: availability,
+                    capacity: capacity
+                })
+            })    
         }
     }
 
@@ -149,8 +220,9 @@ class ProjectBody extends Component {
                 totalResources:0
             }
             let userResources = [];
-            let set1 = res.data.resources??{}.HW_SET_1??defaultCase;
-            let set2 = res.data.resources??{}.HW_SET_2??defaultCase;
+            let project = res.data[0]
+            let set1 = project.resources.HW_SET_1??defaultCase;
+            let set2 = project.resources.HW_SET_2??defaultCase;
             
             let item = set1.usersCheckedOut.filter(user => user.checkedOutBy === this.props.userId)
             if(item.length<1){
@@ -171,10 +243,8 @@ class ProjectBody extends Component {
             
             this.setState({
                 ...this.state,
-                totalResourcesUsed: res.data.currentResources,
-                projectResources: [1,1],
-                userResources: [1,1],
-                projectName: res.data.name,
+                totalResourcesUsed: res.data[0].currentResources,
+                projectName: res.data[0].name,
                 projectResources: [set1.totalResources, set2.totalResources],
                 userResources: userResources,
             })
@@ -378,7 +448,6 @@ class PopupForm extends Component {
     render () {
         return (
             <div className = "pop">
-                {console.log(this.props.buttonPopup)}
                 {this.props.buttonPopup ? <Popup trigger = {this.props.pop}>
                     <h2>Add New Project</h2>
                     <input 

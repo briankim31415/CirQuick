@@ -98,8 +98,7 @@
 
 .sidebar {
   height: 100%;
-  width: 20%;
-  position: fixed;
+  width: 100%;
   z-index: 1;
   top: 1;
   overflow-x: hidden;
@@ -140,4 +139,8 @@
   padding: 2%;
   border: 2px solid lavender;
   border-radius: 4px;
+}
+
+.main {
+  padding-top: 20px;
 }
