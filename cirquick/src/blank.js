@@ -17,14 +17,33 @@ class Blank extends Component {
         super(props);
         this.state = {
             userId : this.props.match.params.userId,
-            dropdown : "",
+            dropdown : null,
+            selectedProjectId : null,
+            selectedProjectName : null,
             buttonPopup: false,
+            projects: []
         }
-
         this.handlePopup = this.handlePopup.bind(this)
         this.handleProjectChange = this.handleProjectChange.bind(this)
     }
-
+    
+    componentDidMount() {
+        client.getUserProjects(
+            this.state.userId 
+        )
+        .then( (res) => {
+            this.setState ({
+                ...this.state,
+                projects: res.data
+            })
+            if(res.data.length!= 0) {
+                this.setState({
+                    ...this.state,
+                    dropdown: res.data[0]
+                })
+            }
+        })
+    }
     handlePopup = (e) => {
         this.setState({
             buttonPopup: !this.state.buttonPopup
@@ -33,7 +52,7 @@ class Blank extends Component {
 
     handleProjectChange = (event) => {
         this.setState({
-            dropdown: event.target.value
+            selectedProjectId: event.target.value,
         })
     }
 
@@ -60,12 +79,12 @@ class Blank extends Component {
                         <br/>
                         <br/>
                         <br/>
-                            <JoinProject userName = {this.state.userId}/>
-                            <PopupForm userName = {this.state.userId} pop = {this.handlePopup} buttonPopup={this.state.buttonPopup}/>
+                            <JoinProject userId = {this.state.userId}/>
+                            <PopupForm userId = {this.state.userId} pop = {this.handlePopup} buttonPopup={this.state.buttonPopup}/>
                     </div>
                     <div class = "main">
-                        <Drop handler = {this.handleProjectChange} dropdown = {this.state.dropdown} userID = {this.state.userId}/>
-                        <ProjectBody userId={this.state.userId} projectId={this.state.dropdown}/>
+                        <Drop handler = {this.handleProjectChange} projects={this.state.projects}/>
+                        {this.state.dropdown?<ProjectBody userId={this.state.userId} projectId={this.state.selectedProjectId} projectName={this.state.selectedProjectName}/>:null}
                     </div>
                 </div>
             </div>
@@ -77,21 +96,6 @@ class Blank extends Component {
 class Drop extends Component {
     constructor(props) {
       super(props);
-      this.state = {
-          projects: []
-      }
-    }
-
-    componentDidMount() {
-        client.getUserProjects(
-            this.props.userID 
-        )
-        .then( (res) => {
-            this.setState ({
-                projects: res.data
-            })
-        }
-        )
     }
   
     render() {
@@ -105,12 +109,11 @@ class Drop extends Component {
             <select 
                 className = "drop"
                 onChange = {this.props.handler}>
-                {this.state.projects.map(project=>(
+                {this.props.projects.map(project=>(
                     <option value = {project.projectId}>{project.name}</option>
                 ))}
             </select>
           </form>
-          {console.log(this.props.dropdown)}
         </div>
       );
   
@@ -122,8 +125,8 @@ class ProjectBody extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            projectId: this.props.projectId,
-            projectName: "", //this comes from the value of the drop down
+            projectId: this.props.projectId??null,
+            projectName: this.props.projectName??null,
             resources: ["HW Set 1", "HW Set 2"], //hard coded for now
             totalResoucesUsed: null, //1
             projectResources: [], //1
@@ -139,12 +142,10 @@ class ProjectBody extends Component {
             this.setState({
                 projectId: this.props.projectId
             })
-            if (this.state.projectId??null == null) {
-                return
-            }
+            
             //1   
             client.getProject(
-                this.state.projectId,
+                this.props.projectId,
             )
             .then(res => {
                 const defaultCase ={
@@ -152,7 +153,7 @@ class ProjectBody extends Component {
                     totalResources:0
                 }
                 let userResources = [];
-                let project = res.data[0]
+                let project = res.data
                 let set1 = project.resources.HW_SET_1??defaultCase;
                 let set2 = project.resources.HW_SET_2??defaultCase;
                 
@@ -175,8 +176,8 @@ class ProjectBody extends Component {
                 
                 this.setState({
                     ...this.state,
-                    totalResourcesUsed: res.data[0].currentResources,
-                    projectName: res.data[0].name,
+                    totalResourcesUsed: res.data.currentResources,
+                    projectName: res.data.name,
                     projectResources: [set1.totalResources, set2.totalResources],
                     userResources: userResources,
                 })
@@ -207,7 +208,7 @@ class ProjectBody extends Component {
     }
 
     componentDidMount() {
-        if (this.state.projectId??null == null) {
+        if (this.state.projectId == null || this.state.projectId == "" || this.state.projectId == undefined) {
             return
         }
         //1   
@@ -221,6 +222,8 @@ class ProjectBody extends Component {
             }
             let userResources = [];
             let project = res.data[0]
+            if(project == undefined)
+                return
             let set1 = project.resources.HW_SET_1??defaultCase;
             let set2 = project.resources.HW_SET_2??defaultCase;
             
@@ -276,6 +279,8 @@ class ProjectBody extends Component {
     }
 
     render() {
+        if(this.state.projectId == null || this.state.projectId == "" || this.state.projectId == undefined)
+            return <div></div>
         return(
             <div className = "projectMain">
                 <h1 className="projectHeader">{this.state.projectName}</h1>
@@ -504,6 +509,10 @@ class JoinProject extends Component {
             if (res.data[0].name !== project_name) { throw e; }
 
             // Add user to project
+            alert(JSON.stringify({
+                "projectId": pid,
+                "userId": this.props.userId
+            }))
             client.addUserToProject({
                 "projectId": pid,
                 "userId": this.props.userId
