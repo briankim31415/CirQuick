@@ -21,7 +21,8 @@ class Blank extends Component {
             selectedProjectId : null,
             selectedProjectName : null,
             buttonPopup: false,
-            projects: []
+            projects: [],
+            selected: false
         }
         this.handlePopup = this.handlePopup.bind(this)
         this.handleProjectChange = this.handleProjectChange.bind(this)
@@ -53,6 +54,7 @@ class Blank extends Component {
     handleProjectChange = (event) => {
         this.setState({
             selectedProjectId: event.target.value,
+            selected: true
         })
     }
 
@@ -83,9 +85,8 @@ class Blank extends Component {
                             <PopupForm userId = {this.state.userId} pop = {this.handlePopup} buttonPopup={this.state.buttonPopup}/>
                     </div>
                     <div class = "main">
-                        <Drop handler = {this.handleProjectChange} projects={this.state.projects}/>
-                        {projectName!="Select Project"?<ProjectBody userId={this.state.userId} projectId={this.state.selectedProjectId} projectName={this.state.selectedProjectName}/>:null}
-                        {/* {this.state.dropdown?<ProjectBody userId={this.state.userId} projectId={this.state.selectedProjectId} projectName={this.state.selectedProjectName}/>:null} */}
+                        <Drop handler = {this.handleProjectChange} projects={this.state.projects} selected = {this.state.selected}/>
+                        {this.state.dropdown?<ProjectBody userId={this.state.userId} projectId={this.state.selectedProjectId} projectName={this.state.selectedProjectName}/>:null}
                     </div>
                 </div>
             </div>
@@ -97,20 +98,26 @@ class Blank extends Component {
 class Drop extends Component {
     constructor(props) {
       super(props);
+      this.defaultOption = this.defaultOption.bind(this);
     }
-  
+
+    defaultOption() {
+        if (this.props.selected) {
+            return <option value = "default" disabled>Select Project</option>;
+        }
+        return <option value = "default">Select Project</option>;
+    }
+
     render() {
-  
       return(
         <div className = "dropdown">
           <form>
             <label className = "drop-label">Search Project</label>
             <br/>
-
             <select 
                 className = "drop"
                 onChange = {this.props.handler}>
-                    <option value = "default">Select Project</option>
+                <this.defaultOption />
                 {this.props.projects.map(project=>(
                     <option value = {project.projectId}>{project.name}</option>
                 ))}
@@ -118,7 +125,6 @@ class Drop extends Component {
           </form>
         </div>
       );
-  
     }
   }
 
