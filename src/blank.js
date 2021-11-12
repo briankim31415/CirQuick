@@ -84,7 +84,8 @@ class Blank extends Component {
                     </div>
                     <div class = "main">
                         <Drop handler = {this.handleProjectChange} projects={this.state.projects}/>
-                        {this.state.dropdown?<ProjectBody userId={this.state.userId} projectId={this.state.selectedProjectId} projectName={this.state.selectedProjectName}/>:null}
+                        {projectName!="Select Project"?<ProjectBody userId={this.state.userId} projectId={this.state.selectedProjectId} projectName={this.state.selectedProjectName}/>:null}
+                        {/* {this.state.dropdown?<ProjectBody userId={this.state.userId} projectId={this.state.selectedProjectId} projectName={this.state.selectedProjectName}/>:null} */}
                     </div>
                 </div>
             </div>
@@ -109,6 +110,7 @@ class Drop extends Component {
             <select 
                 className = "drop"
                 onChange = {this.props.handler}>
+                    <option value = "default">Select Project</option>
                 {this.props.projects.map(project=>(
                     <option value = {project.projectId}>{project.name}</option>
                 ))}
@@ -294,7 +296,7 @@ class ProjectBody extends Component {
                                         <h3>Resources Used by You: {this.state.userResources[0]}</h3>
                                         <h3>Resources Available: {this.state.availability[0]} / {this.state.capacity[0]}</h3>
                                     </div>
-                                    <Form user = {this.props.userId} project = {this.props.projectId} resName = {"HW_SET_1"} userRes = {this.state.userResources[0]} cap = {this.state.capacity[0]} ava = {this.state.availability[0]} cli = {client}/>
+                                    <Form user = {this.props.userId} project = {this.props.projectId} projectName = {this.state.projectName} resName = {"HW_SET_1"} userRes = {this.state.userResources[0]} cap = {this.state.capacity[0]} ava = {this.state.availability[0]} cli = {client}/>
                                 </div>
                         </div>
                         
@@ -306,7 +308,7 @@ class ProjectBody extends Component {
                                         <h3>Resources Used by You: {this.state.userResources[1]}</h3>
                                         <h3>Resources Available: {this.state.availability[1]} / {this.state.capacity[1]}</h3>
                                     </div>
-                                    <Form user = {this.props.userId} project = {this.props.projectId} resName = {"HW_SET_2"} userRes = {this.state.userResources[1]} cap = {this.state.capacity[1]} ava = {this.state.availability[1]}/>
+                                    <Form user = {this.props.userId} project = {this.props.projectId} projectName = {this.state.projectName} resName = {"HW_SET_2"} userRes = {this.state.userResources[1]} cap = {this.state.capacity[1]} ava = {this.state.availability[1]}/>
                                 </div>
                         </div>
                     </div>
@@ -354,6 +356,7 @@ class Form extends Component {
                 "hwSetId": this.props.resName
             }).then(res => {
                 window.location.reload();
+                alert('You have checked in ' + Checkin + ' ' + this.props.resName + ' resources for ' + this.props.projectName);
                 console.log(res.data);
             }).catch(err=>console.log(err));
         }
@@ -374,6 +377,7 @@ class Form extends Component {
                 "hwSetId": this.props.resName
             }).then(res => {
                 window.location.reload();
+                alert('You have checked out ' + CheckOut + ' ' + this.props.resName + ' resources for ' + this.props.projectName);
                 console.log(res.data);
             }).catch(err=>console.log(err));
         }
@@ -441,6 +445,7 @@ class PopupForm extends Component {
                     "description": desc,
                     "name": project_name
                 }).then(res => {
+                    window.location.reload();
                     console.log(res.data);
                 }).catch(err => console.log(err)); 
                 alert('Project created');
@@ -509,14 +514,15 @@ class JoinProject extends Component {
             if (res.data[0].name !== project_name) { throw e; }
 
             // Add user to project
-            alert(JSON.stringify({
-                "projectId": pid,
-                "userId": this.props.userId
-            }))
+            // alert(JSON.stringify({
+            //     "projectId": pid,
+            //     "userId": this.props.userId
+            // }))
             client.addUserToProject({
                 "projectId": pid,
                 "userId": this.props.userId
             }).then(res => {
+                window.location.reload();
                 console.log(res.data);
             }).catch(err => console.log(err));   
             alert('Project successfully added');
