@@ -6,6 +6,7 @@ import Constants from "./config/Constants";
 import { RegisterRoutes } from "./routes/routes";
 
 import type { Request, Response, NextFunction } from "express";
+import path from "path";
 
 const app = express();
 
@@ -16,7 +17,14 @@ const preprocessRequest = (req: Request, res: Response, next: NextFunction) => {
 	res.append("Access-Control-Allow-Headers", "Content-Type, Origin, Authorization");
 	next();
 };
-
+const mongoConfig = async(uri:string)=>{
+	if(mongoose.connection.readyState === 0 || mongoose.connection.readyState === 3){
+		mongoose
+			.connect(uri)
+			.then(() => console.log(`Mongo Connection: ${uri}`))
+			.catch((err) => console.log(err));
+	}
+}
 const main = async () => {
 	// middleware
 	app.use(express.json(/* { limit: '10kb' } */));
@@ -31,10 +39,7 @@ const main = async () => {
 	} catch (err) {
 		console.error("Unable to read swagger.json", err);
 	}
-	mongoose
-		.connect(Constants.mongoUrl)
-		.then(() => console.log(`Mongo Connection: ${Constants.mongoUrl}`))
-		.catch((err) => console.log(err));
+	mongoConfig(Constants.mongoUrl);
 
 	const port = process.env.PORT??3001;
 	app.listen(port, () => {

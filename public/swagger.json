@@ -881,55 +881,6 @@
 				}
 			}
 		},
-		"/echo": {
-			"post": {
-				"operationId": "ExampleEcho",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"echoed": {
-											"type": "string"
-										}
-									},
-									"required": [
-										"echoed"
-									],
-									"type": "object"
-								}
-							}
-						}
-					}
-				},
-				"security": [
-					{
-						"api_key": []
-					}
-				],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"properties": {
-									"toEcho": {
-										"type": "string"
-									}
-								},
-								"required": [
-									"toEcho"
-								],
-								"type": "object"
-							}
-						}
-					}
-				}
-			}
-		},
 		"/user": {
 			"post": {
 				"operationId": "UpdateUser",
