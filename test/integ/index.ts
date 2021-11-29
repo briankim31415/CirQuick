@@ -57,20 +57,49 @@ describe("Integration Tests", () => {
         done();
       });
   });
+  it("Sign Up Err", function (done) {
+    chai
+      .request(app)
+      .post("/signup")
+      .send({
+        username: "",
+        password: "",
+      })
+      .end((err, res) => {
+        chai.expect(res.status).to.equal(500);
+        chai.expect(res.body.userId).to.not.be.null;
+        userId = res.body.userId;
+        done();
+      });
+  });
   it("Sign In", function (done) {
     chai
       .request(app)
       .post("/signin")
       .send({
-        username: "test",
-        password: "test",
+        username: "",
+        password: "",
       })
       .end((err, res) => {
         chai.expect(res.status).to.equal(200);
         done();
       });
   });
-
+  it("Sign In Err", function (done) {
+    chai
+      .request(app)
+      .post("/signin")
+      .send({
+        username: "    dn20enind1r3hr30nirrnf0ifn31r1b!~%……",
+        password: "   di超Joe我irrnf0ifn31r1b!~%……",
+      })
+      .end((err, res) => {
+        chai.expect(res.status).to.equal(500);
+        chai.expect(res.body.userId).to.not.be.null;
+        userId = res.body.userId;
+        done();
+      });
+  });
   it("Create Resource", function (done) {
     chai
       .request(app)
@@ -87,7 +116,22 @@ describe("Integration Tests", () => {
         done();
       });
   });
-
+  it("Create Resource Err", function (done) {
+    chai
+      .request(app)
+      .post("/resource/create")
+      .send({
+        hwSetId: "213",
+        hwSetName: "testName",
+        capacity: 10000000000,
+        availablity: 10000000000,
+        transactions: [],
+      })
+      .end((err, res) => {
+        chai.expect(res.Body).to.equal("User does not exist");
+        done();
+      });
+  });
   it("Get Resource", function (done) {
     chai
       .request(app)
@@ -101,7 +145,6 @@ describe("Integration Tests", () => {
         done();
       });
   });
-
   it("Create Project", function (done) {
     chai
       .request(app)
@@ -118,7 +161,22 @@ describe("Integration Tests", () => {
         done();
       });
   });
-
+  it("Create Project Err", function (done) {
+    chai
+      .request(app)
+      .post("/project/create")
+      .send({
+        userId: "123",
+        description: "string",
+        name: "testProject",
+      })
+      .end((err, res) => {
+        chai.expect(res.status).to.equal(200);
+        chai.expect(res.body.projectId).to.not.null;
+        projectId = res.body.projectId;
+        done();
+      });
+  });
   it("CheckOut", function (done) {
     chai
       .request(app)
@@ -139,10 +197,7 @@ describe("Integration Tests", () => {
       .request(app)
       .get("/project/" + projectId)
       .end((err, res) => {
-        chai.expect(res.status).to.equal(200);
-        chai.expect(res.body.description).to.equal("string");
-        chai.expect(res.body.name).to.equal("testProject");
-        chai.expect(res.body.transactions).to.have.length.greaterThanOrEqual(0);
+        chai.expect(res.body).to.equal("User does not exist");
         done();
       });
   });
@@ -159,6 +214,22 @@ describe("Integration Tests", () => {
       })
       .end((err, res) => {
         chai.expect(res.status).to.equal(200);
+        done();
+      });
+  });
+
+  it("CheckIn Err", function (done) {
+    chai
+      .request(app)
+      .post("/checkinout/checkin")
+      .send({
+        userId: userId,
+        projectId: projectId,
+        hwSetId: "testId",
+        amount: 2000,
+      })
+      .end((err, res) => {
+        chai.expect(res.body).to.equal("Request amount out of range");
         done();
       });
   });
